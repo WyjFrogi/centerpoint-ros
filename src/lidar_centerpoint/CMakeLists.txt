@@ -131,10 +131,10 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
     DESTINATION lib/${PROJECT_NAME}
   )
 
-  install(
-    TARGETS centerpoint_cuda_lib
-    DESTINATION lib
-  )
+  # install(
+  #   TARGETS centerpoint_cuda_lib
+  #   DESTINATION lib
+  # )
 else()
   message("Dependencies not found. Unable to build.")
 endif()
