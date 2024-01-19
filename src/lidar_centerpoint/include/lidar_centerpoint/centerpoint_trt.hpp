@@ -62,14 +62,14 @@ public:
   ~CenterPointTRT();
 
   bool detect(
-    const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer,
+    const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer,
     std::vector<Box3D> & det_boxes3d);
 
 protected:
   void initPtr();
 
   virtual bool preprocess(
-    const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer);
+    const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer);
 
   void inference();
 

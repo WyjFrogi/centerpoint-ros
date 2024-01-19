@@ -18,7 +18,7 @@
 #include <lidar_centerpoint/centerpoint_config.hpp>
 #include <lidar_centerpoint/preprocess/pointcloud_densification.hpp>
 
-#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/PointCloud2.h>
 
 #include <memory>
 #include <vector>
@@ -36,7 +36,7 @@ public:
     std::vector<float> & num_points_per_voxel) = 0;
 
   bool enqueuePointCloud(
-    const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer);
+    const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer);
 
 protected:
   std::unique_ptr<PointCloudDensification> pd_ptr_{nullptr};

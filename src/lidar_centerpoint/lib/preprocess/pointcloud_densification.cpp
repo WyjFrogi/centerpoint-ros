@@ -14,38 +14,35 @@
 
 #include "lidar_centerpoint/preprocess/pointcloud_densification.hpp"
 
-#include <pcl_ros/transforms.hpp>
+#include <pcl_ros/transforms.h>
 
 #include <boost/optional.hpp>
 
 #include <pcl_conversions/pcl_conversions.h>
-#ifdef ROS_DISTRO_GALACTIC
 #include <tf2_eigen/tf2_eigen.h>
-#else
-#include <tf2_eigen/tf2_eigen.hpp>
-#endif
 
 #include <string>
 #include <utility>
 
 namespace
 {
-boost::optional<geometry_msgs::msg::Transform> getTransform(
+boost::optional<geometry_msgs::Transform> getTransform(
   const tf2_ros::Buffer & tf_buffer, const std::string & target_frame_id,
-  const std::string & source_frame_id, const rclcpp::Time & time)
+  const std::string & source_frame_id, const ros::Time & time)
 {
   try {
-    geometry_msgs::msg::TransformStamped transform_stamped;
+    geometry_msgs::TransformStamped transform_stamped;
+    ros::Duration timeout_duration(0.5);
     transform_stamped = tf_buffer.lookupTransform(
-      target_frame_id, source_frame_id, time, rclcpp::Duration::from_seconds(0.5));
+      target_frame_id, source_frame_id, time, timeout_duration);
     return transform_stamped.transform;
   } catch (tf2::TransformException & ex) {
-    RCLCPP_WARN_STREAM(rclcpp::get_logger("lidar_centerpoint"), ex.what());
+    ROS_ERROR("%s", ex.what());
     return boost::none;
   }
 }
 
-Eigen::Affine3f transformToEigen(const geometry_msgs::msg::Transform & t)
+Eigen::Affine3f transformToEigen(const geometry_msgs::Transform & t)
 {
   Eigen::Affine3f a;
   a.matrix() = tf2::transformToEigen(t).matrix().cast<float>();
@@ -61,7 +58,7 @@ PointCloudDensification::PointCloudDensification(const DensificationParam & para
 }
 
 bool PointCloudDensification::enqueuePointCloud(
-  const sensor_msgs::msg::PointCloud2 & pointcloud_msg, const tf2_ros::Buffer & tf_buffer)
+  const sensor_msgs::PointCloud2 & pointcloud_msg, const tf2_ros::Buffer & tf_buffer)
 {
   const auto header = pointcloud_msg.header;
 
@@ -84,10 +81,10 @@ bool PointCloudDensification::enqueuePointCloud(
 }
 
 void PointCloudDensification::enqueue(
-  const sensor_msgs::msg::PointCloud2 & msg, const Eigen::Affine3f & affine_world2current)
+  const sensor_msgs::PointCloud2 & msg, const Eigen::Affine3f & affine_world2current)
 {
   affine_world2current_ = affine_world2current;
-  current_timestamp_ = rclcpp::Time(msg.header.stamp).seconds();
+  current_timestamp_ = ros::Time(msg.header.stamp).toSec();
   PointCloudWithTransform pointcloud = {msg, affine_world2current.inverse()};
   pointcloud_cache_.push_front(pointcloud);
 }

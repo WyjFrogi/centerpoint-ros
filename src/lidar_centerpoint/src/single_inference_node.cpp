@@ -24,10 +24,7 @@
 
 #include <pcl/io/file_io.h>
 #include <pcl_conversions/pcl_conversions.h>
-#ifdef ROS_DISTRO_GALACTIC
 #include <tf2_eigen/tf2_eigen.h>
-#else
-#include <tf2_eigen/tf2_eigen.hpp>
 #endif
 
 #include <fstream>
@@ -156,7 +153,7 @@ std::vector<Eigen::Vector3d> SingleInferenceLidarCenterPointNode::getVertices(
 void SingleInferenceLidarCenterPointNode::detect(
   const std::string & pcd_path, const std::string & detections_path)
 {
-  sensor_msgs::msg::PointCloud2 msg;
+  sensor_msgs::PointCloud2 msg;
   pcl::PointCloud<pcl::PointXYZ>::Ptr pc_ptr(new pcl::PointCloud<pcl::PointXYZ>());
 
   pcl::io::loadPCDFile(pcd_path, *pc_ptr);

@@ -17,11 +17,8 @@
 
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
-#ifdef ROS_DISTRO_GALACTIC
 #include <tf2_sensor_msgs/tf2_sensor_msgs.h>
-#else
-#include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
-#endif
+
 
 #include <list>
 #include <string>
@@ -48,7 +45,7 @@ private:
 
 struct PointCloudWithTransform
 {
-  sensor_msgs::msg::PointCloud2 pointcloud_msg;
+  sensor_msgs::PointCloud2 pointcloud_msg;
   Eigen::Affine3f affine_past2world;
 };
 
@@ -58,7 +55,7 @@ public:
   explicit PointCloudDensification(const DensificationParam & param);
 
   bool enqueuePointCloud(
-    const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer);
+    const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer);
 
   double getCurrentTimestamp() const { return current_timestamp_; }
   Eigen::Affine3f getAffineWorldToCurrent() const { return affine_world2current_; }
@@ -73,7 +70,7 @@ public:
   unsigned int pointcloud_cache_size() const { return param_.pointcloud_cache_size(); }
 
 private:
-  void enqueue(const sensor_msgs::msg::PointCloud2 & msg, const Eigen::Affine3f & affine);
+  void enqueue(const sensor_msgs::PointCloud2 & msg, const Eigen::Affine3f & affine);
   void dequeue();
 
   DensificationParam param_;

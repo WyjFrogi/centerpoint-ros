@@ -100,7 +100,7 @@ void CenterPointTRT::initPtr()
 }
 
 bool CenterPointTRT::detect(
-  const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer,
+  const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer,
   std::vector<Box3D> & det_boxes3d)
 {
   std::fill(voxels_.begin(), voxels_.end(), 0);
@@ -125,7 +125,7 @@ bool CenterPointTRT::detect(
 }
 
 bool CenterPointTRT::preprocess(
-  const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer)
+  const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer)
 {
   bool is_success = vg_ptr_->enqueuePointCloud(input_pointcloud_msg, tf_buffer);
   if (!is_success) {

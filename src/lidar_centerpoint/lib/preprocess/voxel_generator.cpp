@@ -14,7 +14,7 @@
 
 #include "lidar_centerpoint/preprocess/voxel_generator.hpp"
 
-#include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <sensor_msgs/point_cloud2_iterator.h>
 
 namespace centerpoint
 {
@@ -38,7 +38,7 @@ VoxelGeneratorTemplate::VoxelGeneratorTemplate(
 }
 
 bool VoxelGeneratorTemplate::enqueuePointCloud(
-  const sensor_msgs::msg::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer)
+  const sensor_msgs::PointCloud2 & input_pointcloud_msg, const tf2_ros::Buffer & tf_buffer)
 {
   return pd_ptr_->enqueuePointCloud(input_pointcloud_msg, tf_buffer);
 }
@@ -72,7 +72,7 @@ std::size_t VoxelGenerator::pointsToVoxels(
         ? pd_ptr_->getAffineWorldToCurrent() * pc_cache_iter->affine_past2world
         : Eigen::Affine3f::Identity();
     float time_lag = static_cast<float>(
-      pd_ptr_->getCurrentTimestamp() - rclcpp::Time(pc_msg.header.stamp).seconds());
+      pd_ptr_->getCurrentTimestamp() - ros::Time(pc_msg.header.stamp).toSec());
 
     for (sensor_msgs::PointCloud2ConstIterator<float> x_iter(pc_msg, "x"), y_iter(pc_msg, "y"),
          z_iter(pc_msg, "z");

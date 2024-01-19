@@ -1,9 +1,9 @@
 #include "lidar_centerpoint/node.hpp"
 
-// #include <lidar_centerpoint/centerpoint_config.hpp>
-// #include <lidar_centerpoint/preprocess/pointcloud_densification.hpp>
-// #include <lidar_centerpoint/ros_utils.hpp>
-// #include <lidar_centerpoint/utils.hpp>
+#include <lidar_centerpoint/centerpoint_config.hpp>
+#include <lidar_centerpoint/preprocess/pointcloud_densification.hpp>
+#include <lidar_centerpoint/ros_utils.hpp>
+#include <lidar_centerpoint/utils.hpp>
 #include <pcl_ros/transforms.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 

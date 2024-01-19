@@ -6,16 +6,23 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   sensor_msgs
   std_msgs
+  tf2_ros
+  tf2_geometry_msgs
+  tf2_sensor_msgs
+  tensorrt_common
 )
 
 add_compile_options(-Wno-deprecated-declarations)
 
 option(CUDA_VERBOSE "Verbose output of CUDA modules" OFF)
+set(TRT_LIB_PATH /usr/local/TensorRT-8.6.1.6)
+message("TENSORRT_LIB_PATH: ${TRT_LIB_PATH}")
 
 # set flags for CUDA availability
 option(CUDA_AVAIL "CUDA available" OFF)
 find_package(CUDA)
 if(CUDA_FOUND)
+  set(CUDA_VERBOSE ON)
   find_library(CUBLAS_LIBRARIES cublas HINTS
     ${CUDA_TOOLKIT_ROOT_DIR}/lib64
     ${CUDA_TOOLKIT_ROOT_DIR}/lib
@@ -24,6 +31,7 @@ if(CUDA_FOUND)
     message("CUDA is available!")
     message("CUDA Libs: ${CUDA_LIBRARIES}")
     message("CUDA Headers: ${CUDA_INCLUDE_DIRS}")
+    message("CUBLAS: ${CUBLAS_LIBRARIES}")
   endif()
   unset(CUDA_cublas_device_LIBRARY CACHE)
   set(CUDA_AVAIL ON)
@@ -35,8 +43,8 @@ endif()
 # set flags for TensorRT availability
 option(TRT_AVAIL "TensorRT available" OFF)
 # try to find the tensorRT modules
-find_library(NVINFER nvinfer)
-find_library(NVONNXPARSER nvonnxparser)
+find_library(NVINFER nvinfer HINTS ${TRT_LIB_PATH}/lib)
+find_library(NVONNXPARSER nvonnxparser HINTS ${TRT_LIB_PATH}/lib)
 if(NVINFER AND NVONNXPARSER)
   if(CUDA_VERBOSE)
     message("TensorRT is available!")
@@ -74,6 +82,9 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
   include_directories(
     include
     ${CUDA_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
+    /usr/include/eigen3
+
   )
 
   ### centerpoint ###

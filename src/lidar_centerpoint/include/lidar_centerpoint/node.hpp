@@ -1,18 +1,18 @@
 #ifndef _NODE_HPP_
 #define _NODE_HPP_
 
-// #include "lidar_centerpoint/postprocess/non_maximum_suppression.hpp"
+#include "lidar_centerpoint/postprocess/non_maximum_suppression.hpp"
 
-// #include <lidar_centerpoint/centerpoint_trt.hpp>
-// #include <lidar_centerpoint/detection_class_remapper.hpp>
+#include <lidar_centerpoint/centerpoint_trt.hpp>
+#include <lidar_centerpoint/detection_class_remapper.hpp>
 #include <ros/ros.h>
 // #include <tier4_autoware_utils/ros/debug_publisher.hpp>
 // #include <tier4_autoware_utils/system/stop_watch.hpp>
 
-// #include <autoware_auto_perception_msgs/msg/detected_object_kinematics.hpp>
-// #include <autoware_auto_perception_msgs/msg/detected_objects.hpp>
-// #include <autoware_auto_perception_msgs/msg/object_classification.hpp>
-// #include <autoware_auto_perception_msgs/msg/shape.hpp>
+#include <autoware_auto_perception_msgs/msg/detected_object_kinematics.hpp>
+#include <autoware_auto_perception_msgs/msg/detected_objects.hpp>
+#include <autoware_auto_perception_msgs/msg/object_classification.hpp>
+#include <autoware_auto_perception_msgs/msg/shape.hpp>
 #include <sensor_msgs/PointCloud2.h>
 
 #include <memory>
