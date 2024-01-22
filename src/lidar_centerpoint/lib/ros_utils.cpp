@@ -21,29 +21,29 @@
 namespace centerpoint
 {
 
-using Label = autoware_auto_perception_msgs::msg::ObjectClassification;
+using Label = perception_msgs::ObjectClassification;
 
 void box3DToDetectedObject(
   const Box3D & box3d, const std::vector<std::string> & class_names, const bool has_twist,
-  autoware_auto_perception_msgs::msg::DetectedObject & obj)
+  perception_msgs::DetectedObject & obj)
 {
   // TODO(yukke42): the value of classification confidence of DNN, not probability.
   obj.existence_probability = box3d.score;
 
   // classification
-  autoware_auto_perception_msgs::msg::ObjectClassification classification;
+  perception_msgs::ObjectClassification classification;
   classification.probability = 1.0f;
   if (box3d.label >= 0 && static_cast<size_t>(box3d.label) < class_names.size()) {
     classification.label = getSemanticType(class_names[box3d.label]);
   } else {
     classification.label = Label::UNKNOWN;
-    RCLCPP_WARN_STREAM(
-      rclcpp::get_logger("lidar_centerpoint"), "Unexpected label: UNKNOWN is set.");
+    ROS_WARN_STREAM(
+      ros::get_logger("lidar_centerpoint"), "Unexpected label: UNKNOWN is set.");
   }
 
   if (object_recognition_utils::isCarLikeVehicle(classification.label)) {
     obj.kinematics.orientation_availability =
-      autoware_auto_perception_msgs::msg::DetectedObjectKinematics::SIGN_UNKNOWN;
+      perception_msgs::DetectedObjectKinematics::SIGN_UNKNOWN;
   }
 
   obj.classification.emplace_back(classification);
@@ -55,7 +55,7 @@ void box3DToDetectedObject(
     tier4_autoware_utils::createPoint(box3d.x, box3d.y, box3d.z);
   obj.kinematics.pose_with_covariance.pose.orientation =
     tier4_autoware_utils::createQuaternionFromYaw(yaw);
-  obj.shape.type = autoware_auto_perception_msgs::msg::Shape::BOUNDING_BOX;
+  obj.shape.type = perception_msgs::Shape::BOUNDING_BOX;
   obj.shape.dimensions =
     tier4_autoware_utils::createTranslation(box3d.length, box3d.width, box3d.height);
 

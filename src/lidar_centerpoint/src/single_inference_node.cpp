@@ -34,7 +34,7 @@
 namespace centerpoint
 {
 SingleInferenceLidarCenterPointNode::SingleInferenceLidarCenterPointNode(
-  const rclcpp::NodeOptions & node_options)
+  const ros::NodeOptions & node_options)
 : Node("lidar_center_point", node_options), tf_buffer_(this->get_clock())
 {
   const float score_threshold =
@@ -81,13 +81,13 @@ SingleInferenceLidarCenterPointNode::SingleInferenceLidarCenterPointNode(
     densification_world_frame_id, densification_num_past_frames);
 
   if (point_cloud_range.size() != 6) {
-    RCLCPP_WARN_STREAM(
-      rclcpp::get_logger("single_inference_lidar_centerpoint"),
+    ROS_WARN_STREAM(
+      ros::get_logger("single_inference_lidar_centerpoint"),
       "The size of point_cloud_range != 6: use the default parameters.");
   }
   if (voxel_size.size() != 3) {
-    RCLCPP_WARN_STREAM(
-      rclcpp::get_logger("single_inference_lidar_centerpoint"),
+    ROS_WARN_STREAM(
+      ros::get_logger("single_inference_lidar_centerpoint"),
       "The size of voxel_size != 3: use the default parameters.");
   }
   CenterPointConfig config(
@@ -102,7 +102,7 @@ SingleInferenceLidarCenterPointNode::SingleInferenceLidarCenterPointNode(
 }
 
 std::vector<Eigen::Vector3d> SingleInferenceLidarCenterPointNode::getVertices(
-  const autoware_auto_perception_msgs::msg::Shape & shape, const Eigen::Affine3d & pose) const
+  const perception_msgs::Shape & shape, const Eigen::Affine3d & pose) const
 {
   std::vector<Eigen::Vector3d> vertices;
   Eigen::Vector3d vertex;
@@ -166,10 +166,10 @@ void SingleInferenceLidarCenterPointNode::detect(
     return;
   }
 
-  autoware_auto_perception_msgs::msg::DetectedObjects output_msg;
+  perception_msgs::DetectedObjects output_msg;
   output_msg.header = msg.header;
   for (const auto & box3d : det_boxes3d) {
-    autoware_auto_perception_msgs::msg::DetectedObject obj;
+    perception_msgs::DetectedObject obj;
     box3DToDetectedObject(box3d, class_names_, has_twist_, obj);
     output_msg.objects.emplace_back(obj);
   }
@@ -178,13 +178,13 @@ void SingleInferenceLidarCenterPointNode::detect(
 
   dumpDetectionsAsMesh(output_msg, detections_path);
 
-  RCLCPP_INFO(
-    rclcpp::get_logger("single_inference_lidar_centerpoint"),
+  ROS_INFO(
+    ros::get_logger("single_inference_lidar_centerpoint"),
     "The detection results were saved as meshes in %s", detections_path.c_str());
 }
 
 void SingleInferenceLidarCenterPointNode::dumpDetectionsAsMesh(
-  const autoware_auto_perception_msgs::msg::DetectedObjects & objects_msg,
+  const perception_msgs::DetectedObjects & objects_msg,
   const std::string & output_path) const
 {
   std::ofstream ofs(output_path, std::ofstream::out);
@@ -240,6 +240,3 @@ void SingleInferenceLidarCenterPointNode::dumpDetectionsAsMesh(
 }
 
 }  // namespace centerpoint
-
-#include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(centerpoint::SingleInferenceLidarCenterPointNode)

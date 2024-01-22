@@ -18,12 +18,12 @@
 #include <Eigen/Core>
 #include <lidar_centerpoint/centerpoint_trt.hpp>
 #include <lidar_centerpoint/detection_class_remapper.hpp>
-#include <rclcpp/rclcpp.hpp>
+#include <ros/ros.h>
 
-#include <autoware_auto_perception_msgs/msg/detected_object_kinematics.hpp>
-#include <autoware_auto_perception_msgs/msg/detected_objects.hpp>
-#include <autoware_auto_perception_msgs/msg/object_classification.hpp>
-#include <autoware_auto_perception_msgs/msg/shape.hpp>
+#include <perception_msgs/DetectedObjectKinematics.h>
+#include <perception_msgs/DetectedObjects.h>
+#include <perception_msgs/ObjectClassification.h>
+#include <perception_msgs/Shape.h>
 
 #include <memory>
 #include <string>
@@ -32,17 +32,17 @@
 namespace centerpoint
 {
 
-class SingleInferenceLidarCenterPointNode : public rclcpp::Node
+class SingleInferenceLidarCenterPointNode : public ros::Node
 {
 public:
-  explicit SingleInferenceLidarCenterPointNode(const rclcpp::NodeOptions & node_options);
+  explicit SingleInferenceLidarCenterPointNode(const ros::NodeOptions & node_options);
 
 private:
   void detect(const std::string & pcd_path, const std::string & detections_path);
   std::vector<Eigen::Vector3d> getVertices(
-    const autoware_auto_perception_msgs::msg::Shape & shape, const Eigen::Affine3d & pose) const;
+    const perception_msgs::Shape & shape, const Eigen::Affine3d & pose) const;
   void dumpDetectionsAsMesh(
-    const autoware_auto_perception_msgs::msg::DetectedObjects & objects_msg,
+    const perception_msgs::DetectedObjects & objects_msg,
     const std::string & output_path) const;
 
   tf2_ros::Buffer tf_buffer_;

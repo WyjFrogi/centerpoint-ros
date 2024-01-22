@@ -9,10 +9,10 @@
 // #include <tier4_autoware_utils/ros/debug_publisher.hpp>
 // #include <tier4_autoware_utils/system/stop_watch.hpp>
 
-#include <autoware_auto_perception_msgs/msg/detected_object_kinematics.hpp>
-#include <autoware_auto_perception_msgs/msg/detected_objects.hpp>
-#include <autoware_auto_perception_msgs/msg/object_classification.hpp>
-#include <autoware_auto_perception_msgs/msg/shape.hpp>
+#include <perception_msgs/DetectedObjectKinematics.h>
+#include <perception_msgs/DetectedObjects.h>
+#include <perception_msgs/ObjectClassification.h>
+#include <perception_msgs/Shape.h>
 #include <sensor_msgs/PointCloud2.h>
 
 #include <memory>

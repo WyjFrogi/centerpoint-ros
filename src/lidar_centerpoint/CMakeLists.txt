@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_geometry_msgs
   tf2_sensor_msgs
   tensorrt_common
+  perception_msgs
 )
 
 add_compile_options(-Wno-deprecated-declarations)

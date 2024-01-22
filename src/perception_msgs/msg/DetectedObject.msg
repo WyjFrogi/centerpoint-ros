@@ -1,0 +1,5 @@
+float32 existence_probability
+
+perception_msgs/ObjectClassification[] classification
+perception_msgs/DetectedObjectKinematics kinematics
+perception_msgs/Shape shape

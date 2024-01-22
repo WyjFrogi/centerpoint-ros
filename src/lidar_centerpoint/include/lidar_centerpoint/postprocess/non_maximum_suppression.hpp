@@ -19,14 +19,14 @@
 
 #include <Eigen/Eigen>
 
-#include "autoware_auto_perception_msgs/msg/detected_object.hpp"
+#include "perception_msgs/DetectedObject.h"
 
 #include <string>
 #include <vector>
 
 namespace centerpoint
 {
-using autoware_auto_perception_msgs::msg::DetectedObject;
+using perception_msgs::DetectedObject;
 
 // TODO(yukke42): now only support IoU_BEV
 enum class NMS_TYPE {

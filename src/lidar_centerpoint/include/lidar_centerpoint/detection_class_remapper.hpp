@@ -17,10 +17,10 @@
 
 #include <Eigen/Core>
 
-#include <autoware_auto_perception_msgs/msg/detected_object_kinematics.hpp>
-#include <autoware_auto_perception_msgs/msg/detected_objects.hpp>
-#include <autoware_auto_perception_msgs/msg/object_classification.hpp>
-#include <autoware_auto_perception_msgs/msg/shape.hpp>
+#include <perception_msgs/DetectedObjectKinematics.h>
+#include <perception_msgs/DetectedObjects.h>
+#include <perception_msgs/ObjectClassification.h>
+#include <perception_msgs/Shape.h>
 
 #include <vector>
 
@@ -33,7 +33,7 @@ public:
   void setParameters(
     const std::vector<int64_t> & allow_remapping_by_area_matrix,
     const std::vector<double> & min_area_matrix, const std::vector<double> & max_area_matrix);
-  void mapClasses(autoware_auto_perception_msgs::msg::DetectedObjects & msg);
+  void mapClasses(perception_msgs::DetectedObjects & msg);
 
 protected:
   Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic> allow_remapping_by_area_matrix_;

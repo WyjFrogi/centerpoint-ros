@@ -14,7 +14,7 @@
 
 #include "lidar_centerpoint/network/network_trt.hpp"
 
-#include <rclcpp/rclcpp.hpp>
+#include <ros/ros.h>
 
 namespace centerpoint
 {
@@ -65,8 +65,8 @@ bool HeadTRT::setProfile(
     if (
       out_name == std::string("heatmap") &&
       network.getOutput(ci)->getDimensions().d[1] != static_cast<int32_t>(out_channel_sizes_[ci])) {
-      RCLCPP_ERROR(
-        rclcpp::get_logger("lidar_centerpoint"),
+      ROS_ERROR(
+        ros::get_logger("lidar_centerpoint"),
         "Expected and actual number of classes do not match");
       return false;
     }

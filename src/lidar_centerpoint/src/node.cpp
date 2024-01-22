@@ -73,7 +73,7 @@ LidarCenterPointNode::LidarCenterPointNode()
 
   pointcloud_sub_ = nh.subscribe<sensor_msgs::PointCloud2>(
     "~/input/pointcloud", 1, LidarCenterPointNode::pointCloudCallback);
-  // objects_pub_ = nh.advertise<autoware_auto_perception_msgs::msg::DetectedObjects>(
+  // objects_pub_ = nh.advertise<perception_msgs::DetectedObjects>(
   //   "~/output/objects", 10);
 
   // initialize debug tool
@@ -87,8 +87,8 @@ LidarCenterPointNode::LidarCenterPointNode()
   // }
 
   // if (this->declare_parameter("build_only", false)) {
-  //   RCLCPP_INFO(this->get_logger(), "TensorRT engine is built and shutdown node.");
-  //   rclcpp::shutdown();
+  //   ROS_INFO(this->get_logger(), "TensorRT engine is built and shutdown node.");
+  //   ros::shutdown();
   // }
 }
 
@@ -107,15 +107,15 @@ void LidarCenterPointNode::pointCloudCallback(
   //   return;
   // }
 
-  // std::vector<autoware_auto_perception_msgs::msg::DetectedObject> raw_objects;
+  // std::vector<perception_msgs::DetectedObject> raw_objects;
   // raw_objects.reserve(det_boxes3d.size());
   // for (const auto & box3d : det_boxes3d) {
-  //   autoware_auto_perception_msgs::msg::DetectedObject obj;
+  //   perception_msgs::DetectedObject obj;
   //   box3DToDetectedObject(box3d, class_names_, has_twist_, obj);
   //   raw_objects.emplace_back(obj);
   // }
 
-  // autoware_auto_perception_msgs::msg::DetectedObjects output_msg;
+  // perception_msgs::DetectedObjects output_msg;
   // output_msg.header = input_pointcloud_msg->header;
   // output_msg.objects = iou_bev_nms_.apply(raw_objects);
 
