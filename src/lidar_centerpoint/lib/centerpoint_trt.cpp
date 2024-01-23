@@ -112,8 +112,7 @@ bool CenterPointTRT::detect(
     cudaMemsetAsync(spatial_features_d_.get(), 0, spatial_features_size_ * sizeof(float), stream_));
 
   if (!preprocess(input_pointcloud_msg, tf_buffer)) {
-    ROS_WARN_STREAM(
-      ros::get_logger("lidar_centerpoint"), "Fail to preprocess and skip to detect.");
+    ROS_WARN_STREAM("Fail to preprocess and skip to detect.");
     return false;
   }
 
@@ -189,7 +188,7 @@ void CenterPointTRT::postProcess(std::vector<Box3D> & det_boxes3d)
     head_out_heatmap_d_.get(), head_out_offset_d_.get(), head_out_z_d_.get(), head_out_dim_d_.get(),
     head_out_rot_d_.get(), head_out_vel_d_.get(), det_boxes3d, stream_));
   if (det_boxes3d.size() == 0) {
-    ROS_INFO_STREAM(ros::get_logger("lidar_centerpoint"), "No detected boxes.");
+    ROS_INFO_STREAM("No detected boxes.");
   }
 }
 

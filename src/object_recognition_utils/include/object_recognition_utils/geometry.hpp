@@ -23,35 +23,35 @@
 namespace object_recognition_utils
 {
 template <class T>
-geometry_msgs::msg::Pose getPose([[maybe_unused]] const T & p)
+geometry_msgs::Pose getPose([[maybe_unused]] const T & p)
 {
   static_assert(sizeof(T) == 0, "Only specializations of getPose can be used.");
   throw std::logic_error("Only specializations of getPose can be used.");
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(const geometry_msgs::msg::Pose & p)
+inline geometry_msgs::Pose getPose(const geometry_msgs::Pose & p)
 {
   return p;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(
-  const autoware_auto_perception_msgs::msg::DetectedObject & obj)
+inline geometry_msgs::Pose getPose(
+  const perception_msgs::DetectedObject & obj)
 {
   return obj.kinematics.pose_with_covariance.pose;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(
-  const autoware_auto_perception_msgs::msg::TrackedObject & obj)
+inline geometry_msgs::Pose getPose(
+  const perception_msgs::TrackedObject & obj)
 {
   return obj.kinematics.pose_with_covariance.pose;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(
-  const autoware_auto_perception_msgs::msg::PredictedObject & obj)
+inline geometry_msgs::Pose getPose(
+  const perception_msgs::PredictedObject & obj)
 {
   return obj.kinematics.initial_pose_with_covariance.pose;
 }

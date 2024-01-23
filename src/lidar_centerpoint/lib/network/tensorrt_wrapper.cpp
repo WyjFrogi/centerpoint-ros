@@ -42,7 +42,7 @@ bool TensorRTWrapper::init(
   runtime_ =
     tensorrt_common::TrtUniquePtr<nvinfer1::IRuntime>(nvinfer1::createInferRuntime(logger_));
   if (!runtime_) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create runtime");
+    ROS_ERROR("Failed to create runtime");
     return false;
   }
 
@@ -61,15 +61,14 @@ bool TensorRTWrapper::init(
 bool TensorRTWrapper::createContext()
 {
   if (!engine_) {
-    ROS_ERROR(
-      ros::get_logger("lidar_centerpoint"), "Failed to create context: Engine was not created");
+    ROS_ERROR("Failed to create context: Engine was not created");
     return false;
   }
 
   context_ =
     tensorrt_common::TrtUniquePtr<nvinfer1::IExecutionContext>(engine_->createExecutionContext());
   if (!context_) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create context");
+    ROS_ERROR("Failed to create context");
     return false;
   }
 
@@ -83,14 +82,14 @@ bool TensorRTWrapper::parseONNX(
   auto builder =
     tensorrt_common::TrtUniquePtr<nvinfer1::IBuilder>(nvinfer1::createInferBuilder(logger_));
   if (!builder) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create builder");
+    ROS_ERROR("Failed to create builder");
     return false;
   }
 
   auto config =
     tensorrt_common::TrtUniquePtr<nvinfer1::IBuilderConfig>(builder->createBuilderConfig());
   if (!config) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create config");
+    ROS_ERROR("Failed to create config");
     return false;
   }
 #if (NV_TENSORRT_MAJOR * 1000) + (NV_TENSORRT_MINOR * 100) + NV_TENSOR_PATCH >= 8400
@@ -100,12 +99,10 @@ bool TensorRTWrapper::parseONNX(
 #endif
   if (precision == "fp16") {
     if (builder->platformHasFastFp16()) {
-      ROS_INFO(ros::get_logger("lidar_centerpoint"), "Using TensorRT FP16 Inference");
+      ROS_INFO("Using TensorRT FP16 Inference");
       config->setFlag(nvinfer1::BuilderFlag::kFP16);
     } else {
-      ROS_INFO(
-        ros::get_logger("lidar_centerpoint"),
-        "TensorRT FP16 Inference isn't supported in this environment");
+      ROS_INFO("TensorRT FP16 Inference isn't supported in this environment");
     }
   }
 
@@ -114,7 +111,7 @@ bool TensorRTWrapper::parseONNX(
   auto network =
     tensorrt_common::TrtUniquePtr<nvinfer1::INetworkDefinition>(builder->createNetworkV2(flag));
   if (!network) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create network");
+    ROS_ERROR("Failed to create network");
     return false;
   }
 
@@ -123,23 +120,21 @@ bool TensorRTWrapper::parseONNX(
   parser->parseFromFile(onnx_path.c_str(), static_cast<int>(nvinfer1::ILogger::Severity::kERROR));
 
   if (!setProfile(*builder, *network, *config)) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to set profile");
+    ROS_ERROR("Failed to set profile");
     return false;
   }
 
-  ROS_INFO_STREAM(
-    ros::get_logger("lidar_centerpoint"),
-    "Applying optimizations and building TRT CUDA engine (" << onnx_path << ") ...");
+  ROS_INFO_STREAM("Applying optimizations and building TRT CUDA engine (" << onnx_path << ") ...");
   plan_ = tensorrt_common::TrtUniquePtr<nvinfer1::IHostMemory>(
     builder->buildSerializedNetwork(*network, *config));
   if (!plan_) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create serialized network");
+    ROS_ERROR("Failed to create serialized network");
     return false;
   }
   engine_ = tensorrt_common::TrtUniquePtr<nvinfer1::ICudaEngine>(
     runtime_->deserializeCudaEngine(plan_->data(), plan_->size()));
   if (!engine_) {
-    ROS_ERROR(ros::get_logger("lidar_centerpoint"), "Failed to create engine");
+    ROS_ERROR("Failed to create engine");
     return false;
   }
 
@@ -148,7 +143,7 @@ bool TensorRTWrapper::parseONNX(
 
 bool TensorRTWrapper::saveEngine(const std::string & engine_path)
 {
-  ROS_INFO_STREAM(ros::get_logger("lidar_centerpoint"), "Writing to " << engine_path);
+  ROS_INFO_STREAM("Writing to " << engine_path);
   std::ofstream file(engine_path, std::ios::out | std::ios::binary);
   file.write(reinterpret_cast<const char *>(plan_->data()), plan_->size());
   return true;
@@ -162,7 +157,7 @@ bool TensorRTWrapper::loadEngine(const std::string & engine_path)
   std::string engine_str = engine_buffer.str();
   engine_ = tensorrt_common::TrtUniquePtr<nvinfer1::ICudaEngine>(runtime_->deserializeCudaEngine(
     reinterpret_cast<const void *>(engine_str.data()), engine_str.size()));
-  ROS_INFO_STREAM(ros::get_logger("lidar_centerpoint"), "Loaded engine from " << engine_path);
+  ROS_INFO_STREAM("Loaded engine from " << engine_path);
   return true;
 }
 

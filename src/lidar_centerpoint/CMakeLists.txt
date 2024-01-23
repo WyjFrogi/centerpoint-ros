@@ -19,8 +19,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_compile_options(-Wno-deprecated-declarations)
 
 option(CUDA_VERBOSE "Verbose output of CUDA modules" OFF)
-set(TRT_LIB_PATH /usr/local/TensorRT-8.6.1.6)
-message("TENSORRT_LIB_PATH: ${TRT_LIB_PATH}")
+set(TRT_PATH /usr/local/TensorRT-8.6.1.6)
+message("TENSORRT_LIB_PATH: ${TRT_PATH}")
 
 # set flags for CUDA availability
 option(CUDA_AVAIL "CUDA available" OFF)
@@ -47,8 +47,8 @@ endif()
 # set flags for TensorRT availability
 option(TRT_AVAIL "TensorRT available" OFF)
 # try to find the tensorRT modules
-find_library(NVINFER nvinfer HINTS ${TRT_LIB_PATH}/lib)
-find_library(NVONNXPARSER nvonnxparser HINTS ${TRT_LIB_PATH}/lib)
+find_library(NVINFER nvinfer HINTS ${TRT_PATH}/lib)
+find_library(NVONNXPARSER nvonnxparser HINTS ${TRT_PATH}/lib)
 if(NVINFER AND NVONNXPARSER)
   if(CUDA_VERBOSE)
     message("TensorRT is available!")

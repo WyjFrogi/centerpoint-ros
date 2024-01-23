@@ -17,10 +17,10 @@
 
 #include "tier4_autoware_utils/geometry/boost_geometry.hpp"
 
-#include <autoware_auto_perception_msgs/msg/detected_object.hpp>
-#include <autoware_auto_perception_msgs/msg/predicted_object.hpp>
-#include <autoware_auto_perception_msgs/msg/tracked_object.hpp>
-#include <geometry_msgs/msg/pose.hpp>
+#include <perception_msgs/DetectedObject.h>
+#include <perception_msgs/PredictedObject.h>
+#include <perception_msgs/TrackedObject.h>
+#include <geometry_msgs/Pose.h>
 
 #include <vector>
 
@@ -28,22 +28,22 @@ namespace tier4_autoware_utils
 {
 bool isClockwise(const Polygon2d & polygon);
 Polygon2d inverseClockwise(const Polygon2d & polygon);
-geometry_msgs::msg::Polygon rotatePolygon(
-  const geometry_msgs::msg::Polygon & polygon, const double & angle);
+geometry_msgs::Polygon rotatePolygon(
+  const geometry_msgs::Polygon & polygon, const double & angle);
 /// @brief rotate a polygon by some angle around the origin
 /// @param[in] polygon input polygon
 /// @param[in] angle angle of rotation [rad]
 /// @return rotated polygon
 Polygon2d rotatePolygon(const Polygon2d & polygon, const double angle);
 Polygon2d toPolygon2d(
-  const geometry_msgs::msg::Pose & pose, const autoware_auto_perception_msgs::msg::Shape & shape);
-Polygon2d toPolygon2d(const autoware_auto_perception_msgs::msg::DetectedObject & object);
-Polygon2d toPolygon2d(const autoware_auto_perception_msgs::msg::TrackedObject & object);
-Polygon2d toPolygon2d(const autoware_auto_perception_msgs::msg::PredictedObject & object);
+  const geometry_msgs::Pose & pose, const perception_msgs::Shape & shape);
+Polygon2d toPolygon2d(const perception_msgs::DetectedObject & object);
+Polygon2d toPolygon2d(const perception_msgs::TrackedObject & object);
+Polygon2d toPolygon2d(const perception_msgs::PredictedObject & object);
 Polygon2d toFootprint(
-  const geometry_msgs::msg::Pose & base_link_pose, const double base_to_front,
+  const geometry_msgs::Pose & base_link_pose, const double base_to_front,
   const double base_to_rear, const double width);
-double getArea(const autoware_auto_perception_msgs::msg::Shape & shape);
+double getArea(const perception_msgs::Shape & shape);
 Polygon2d expandPolygon(const Polygon2d & input_polygon, const double offset);
 }  // namespace tier4_autoware_utils
 

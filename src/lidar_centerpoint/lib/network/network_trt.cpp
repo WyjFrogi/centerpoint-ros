@@ -65,9 +65,7 @@ bool HeadTRT::setProfile(
     if (
       out_name == std::string("heatmap") &&
       network.getOutput(ci)->getDimensions().d[1] != static_cast<int32_t>(out_channel_sizes_[ci])) {
-      ROS_ERROR(
-        ros::get_logger("lidar_centerpoint"),
-        "Expected and actual number of classes do not match");
+      ROS_ERROR("Expected and actual number of classes do not match");
       return false;
     }
     auto out_dims = nvinfer1::Dims4(

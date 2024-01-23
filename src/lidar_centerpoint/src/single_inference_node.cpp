@@ -81,14 +81,10 @@ SingleInferenceLidarCenterPointNode::SingleInferenceLidarCenterPointNode(
     densification_world_frame_id, densification_num_past_frames);
 
   if (point_cloud_range.size() != 6) {
-    ROS_WARN_STREAM(
-      ros::get_logger("single_inference_lidar_centerpoint"),
-      "The size of point_cloud_range != 6: use the default parameters.");
+    ROS_WARN_STREAM("The size of point_cloud_range != 6: use the default parameters.");
   }
   if (voxel_size.size() != 3) {
-    ROS_WARN_STREAM(
-      ros::get_logger("single_inference_lidar_centerpoint"),
-      "The size of voxel_size != 3: use the default parameters.");
+    ROS_WARN_STREAM("The size of voxel_size != 3: use the default parameters.");
   }
   CenterPointConfig config(
     class_names_.size(), point_feature_size, max_voxel_size, point_cloud_range, voxel_size,
@@ -178,9 +174,7 @@ void SingleInferenceLidarCenterPointNode::detect(
 
   dumpDetectionsAsMesh(output_msg, detections_path);
 
-  ROS_INFO(
-    ros::get_logger("single_inference_lidar_centerpoint"),
-    "The detection results were saved as meshes in %s", detections_path.c_str());
+  ROS_INFO("The detection results were saved as meshes in %s", detections_path.c_str());
 }
 
 void SingleInferenceLidarCenterPointNode::dumpDetectionsAsMesh(
