@@ -16,6 +16,7 @@
 #define LIDAR_CENTERPOINT__ROS_UTILS_HPP_
 
 // ros packages cannot be included from cuda.
+#include <ros/ros.h>
 
 #include <lidar_centerpoint/utils.hpp>
 

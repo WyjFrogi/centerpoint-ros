@@ -58,6 +58,9 @@
   <build_depend>tf2_geometry_msgs</build_depend>
   <build_depend>tf2_sensor_msgs</build_depend>
   <build_depend>tensorrt_common</build_depend>
+  <build_depend>perception_msgs</build_depend>
+  <build_depend>object_recognition_utils</build_depend>
+  <build_depend>tier4_autoware_utils</build_depend>
 
   <build_export_depend>pcl_ros</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
@@ -68,6 +71,9 @@
   <build_export_depend>tf2_geometry_msgs</build_export_depend>
   <build_export_depend>tf2_sensor_msgs</build_export_depend>
   <build_export_depend>tensorrt_common</build_export_depend>
+  <build_export_depend>perception_msgs</build_export_depend>
+  <build_export_depend>object_recognition_utils</build_export_depend>
+  <build_export_depend>tier4_autoware_utils</build_export_depend>
 
   <exec_depend>pcl_ros</exec_depend>
   <exec_depend>roscpp</exec_depend>
@@ -78,6 +84,9 @@
   <exec_depend>tf2_geometry_msgs</exec_depend>
   <exec_depend>tf2_sensor_msgs</exec_depend>
   <exec_depend>tensorrt_common</exec_depend>
+  <exec_depend>perception_msgs</exec_depend>
+  <exec_depend>object_recognition_utils</exec_depend>
+  <exec_depend>tier4_autoware_utils</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

@@ -37,8 +37,7 @@ void box3DToDetectedObject(
     classification.label = getSemanticType(class_names[box3d.label]);
   } else {
     classification.label = Label::UNKNOWN;
-    ROS_WARN_STREAM(
-      ros::get_logger("lidar_centerpoint"), "Unexpected label: UNKNOWN is set.");
+    ROS_WARN_STREAM("Unexpected label: UNKNOWN is set.");
   }
 
   if (object_recognition_utils::isCarLikeVehicle(classification.label)) {
@@ -63,7 +62,7 @@ void box3DToDetectedObject(
   if (has_twist) {
     float vel_x = box3d.vel_x;
     float vel_y = box3d.vel_y;
-    geometry_msgs::msg::Twist twist;
+    geometry_msgs::Twist twist;
     twist.linear.x = std::sqrt(std::pow(vel_x, 2) + std::pow(vel_y, 2));
     twist.angular.z = 2 * (std::atan2(vel_y, vel_x) - yaw);
     obj.kinematics.twist_with_covariance.twist = twist;

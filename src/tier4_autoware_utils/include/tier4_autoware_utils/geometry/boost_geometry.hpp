@@ -22,7 +22,7 @@
 #define EIGEN_MPL2_ONLY
 #include <Eigen/Core>
 
-#include <geometry_msgs/msg/point.hpp>
+#include <geometry_msgs/Point.h>
 
 namespace tier4_autoware_utils
 {
@@ -75,16 +75,16 @@ inline Point2d Point3d::to_2d() const
   return Point2d{x(), y()};
 }
 
-inline geometry_msgs::msg::Point toMsg(const Point3d & point)
+inline geometry_msgs::Point toMsg(const Point3d & point)
 {
-  geometry_msgs::msg::Point msg;
+  geometry_msgs::Point msg;
   msg.x = point.x();
   msg.y = point.y();
   msg.z = point.z();
   return msg;
 }
 
-inline Point3d fromMsg(const geometry_msgs::msg::Point & msg)
+inline Point3d fromMsg(const geometry_msgs::Point & msg)
 {
   Point3d point;
   point.x() = msg.x;

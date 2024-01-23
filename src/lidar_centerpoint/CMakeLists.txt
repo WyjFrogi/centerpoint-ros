@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(lidar_centerpoint)
+add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -11,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_sensor_msgs
   tensorrt_common
   perception_msgs
+  object_recognition_utils
+  tier4_autoware_utils
 )
 
 add_compile_options(-Wno-deprecated-declarations)

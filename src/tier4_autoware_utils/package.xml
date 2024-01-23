@@ -1,39 +1,35 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
+<package format="2">
   <name>tier4_autoware_utils</name>
-  <version>0.1.0</version>
+  <version>0.0.0</version>
   <description>The tier4_autoware_utils package</description>
-  <maintainer email="takamasa.horibe@tier4.jp">Takamasa Horibe</maintainer>
-  <maintainer email="takayuki.murooka@tier4.jp">Takayuki Murooka</maintainer>
-  <maintainer email="yutaka.shimizu@tier4.jp">Yutaka Shimizu</maintainer>
-  <maintainer email="mamoru.sobue@tier4.jp">Mamoru Sobue</maintainer>
-  <license>Apache License 2.0</license>
 
-  <buildtool_depend>ament_cmake_auto</buildtool_depend>
-  <buildtool_depend>autoware_cmake</buildtool_depend>
+  <maintainer email="root@todo.todo">root</maintainer>
+  <license>TODO</license>
 
-  <depend>autoware_auto_perception_msgs</depend>
-  <depend>autoware_auto_planning_msgs</depend>
-  <depend>autoware_auto_vehicle_msgs</depend>
-  <depend>builtin_interfaces</depend>
-  <depend>diagnostic_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>libboost-dev</depend>
-  <depend>pcl_conversions</depend>
-  <depend>pcl_ros</depend>
-  <depend>rclcpp</depend>
-  <depend>tf2</depend>
-  <depend>tf2_geometry_msgs</depend>
-  <depend>tier4_debug_msgs</depend>
-  <depend>unique_identifier_msgs</depend>
-  <depend>visualization_msgs</depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>perception_msgs</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
 
-  <test_depend>ament_cmake_ros</test_depend>
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>autoware_lint_common</test_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>perception_msgs</build_export_depend>
+  <build_export_depend>tf2</build_export_depend>
+  <build_export_depend>tf2_ros</build_export_depend>
+  <build_export_depend>tf2_geometry_msgs</build_export_depend>
 
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>perception_msgs</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <build_type>ament_cmake</build_type>
+    <!-- Other tools can request additional information be placed here -->
+
   </export>
 </package>

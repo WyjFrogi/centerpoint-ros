@@ -15,11 +15,11 @@
 #ifndef OBJECT_RECOGNITION_UTILS__OBJECT_RECOGNITION_UTILS_HPP_
 #define OBJECT_RECOGNITION_UTILS__OBJECT_RECOGNITION_UTILS_HPP_
 
-#include "object_recognition_utils/conversion.hpp"
-#include "object_recognition_utils/geometry.hpp"
-#include "object_recognition_utils/matching.hpp"
+// #include "object_recognition_utils/conversion.hpp"
+// #include "object_recognition_utils/geometry.hpp"
+// #include "object_recognition_utils/matching.hpp"
 #include "object_recognition_utils/object_classification.hpp"
-#include "object_recognition_utils/predicted_path_utils.hpp"
-#include "object_recognition_utils/transform.hpp"
+// #include "object_recognition_utils/predicted_path_utils.hpp"
+// #include "object_recognition_utils/transform.hpp"
 
 #endif  // OBJECT_RECOGNITION_UTILS__OBJECT_RECOGNITION_UTILS_HPP_

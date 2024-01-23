@@ -15,10 +15,10 @@
 #ifndef OBJECT_RECOGNITION_UTILS__GEOMETRY_HPP_
 #define OBJECT_RECOGNITION_UTILS__GEOMETRY_HPP_
 
-#include <autoware_auto_perception_msgs/msg/detected_object.hpp>
-#include <autoware_auto_perception_msgs/msg/predicted_object.hpp>
-#include <autoware_auto_perception_msgs/msg/tracked_object.hpp>
-#include <geometry_msgs/msg/pose.hpp>
+#include <perception_msgs/DetectedObject.h>
+#include <perception_msgs/PredictedObject.h>
+#include <perception_msgs/TrackedObject.h>
+#include <geometry_msgs/Pose.h>
 
 namespace object_recognition_utils
 {

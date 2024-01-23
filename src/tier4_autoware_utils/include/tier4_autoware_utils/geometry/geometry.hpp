@@ -24,21 +24,21 @@
 #include <string>
 #include <vector>
 
-#define EIGEN_MPL2_ONLY
+// #define EIGEN_MPL2_ONLY
 #include <Eigen/Core>
-
-#include <autoware_auto_planning_msgs/msg/path.hpp>
-#include <autoware_auto_planning_msgs/msg/path_with_lane_id.hpp>
-#include <autoware_auto_planning_msgs/msg/trajectory.hpp>
-#include <geometry_msgs/msg/point32.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <geometry_msgs/msg/quaternion.hpp>
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <geometry_msgs/msg/twist.hpp>
-#include <geometry_msgs/msg/twist_with_covariance.hpp>
-#include <geometry_msgs/msg/vector3.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <optional>
+// #include <autoware_auto_planning_msgs/msg/path.hpp>
+// #include <autoware_auto_planning_msgs/msg/path_with_lane_id.hpp>
+// #include <autoware_auto_planning_msgs/msg/trajectory.hpp>
+#include <geometry_msgs/Point32.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TwistWithCovariance.h>
+#include <geometry_msgs/Vector3.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <tf2/utils.h>
 
@@ -46,11 +46,11 @@
 //              after they are implemented in ros2 geometry2.
 namespace tf2
 {
-void fromMsg(const geometry_msgs::msg::PoseStamped & msg, tf2::Stamped<tf2::Transform> & out);
+void fromMsg(const geometry_msgs::PoseStamped & msg, tf2::Stamped<tf2::Transform> & out);
 #ifdef ROS_DISTRO_GALACTIC
 // Remove after this commit is released
 // https://github.com/ros2/geometry2/commit/e9da371d81e388a589540357c050e262442f1b4a
-inline geometry_msgs::msg::Point & toMsg(const tf2::Vector3 & in, geometry_msgs::msg::Point & out)
+inline geometry_msgs::Point & toMsg(const tf2::Vector3 & in, geometry_msgs::Point & out)
 {
   out.x = in.getX();
   out.y = in.getY();
@@ -60,15 +60,15 @@ inline geometry_msgs::msg::Point & toMsg(const tf2::Vector3 & in, geometry_msgs:
 
 // Remove after this commit is released
 // https://github.com/ros2/geometry2/commit/e9da371d81e388a589540357c050e262442f1b4a
-inline void fromMsg(const geometry_msgs::msg::Point & in, tf2::Vector3 & out)
+inline void fromMsg(const geometry_msgs::Point & in, tf2::Vector3 & out)
 {
   out = tf2::Vector3(in.x, in.y, in.z);
 }
 
 template <>
 inline void doTransform(
-  const geometry_msgs::msg::Point & t_in, geometry_msgs::msg::Point & t_out,
-  const geometry_msgs::msg::TransformStamped & transform)
+  const geometry_msgs::Point & t_in, geometry_msgs::Point & t_out,
+  const geometry_msgs::TransformStamped & transform)
 {
   tf2::Transform t;
   fromMsg(transform.transform, t);
@@ -80,8 +80,8 @@ inline void doTransform(
 
 template <>
 inline void doTransform(
-  const geometry_msgs::msg::Pose & t_in, geometry_msgs::msg::Pose & t_out,
-  const geometry_msgs::msg::TransformStamped & transform)
+  const geometry_msgs::Pose & t_in, geometry_msgs::Pose & t_out,
+  const geometry_msgs::TransformStamped & transform)
 {
   tf2::Vector3 v;
   fromMsg(t_in.position, v);
@@ -99,89 +99,93 @@ inline void doTransform(
 namespace tier4_autoware_utils
 {
 template <class T>
-geometry_msgs::msg::Point getPoint(const T & p)
+geometry_msgs::Point getPoint(const T & p)
 {
-  return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+  geometry_msgs::Point point;
+  point.x = p.x;
+  point.y = p.y;
+  point.z = p.z;
+  return point;
 }
 
 template <>
-inline geometry_msgs::msg::Point getPoint(const geometry_msgs::msg::Point & p)
+inline geometry_msgs::Point getPoint(const geometry_msgs::Point & p)
 {
   return p;
 }
 
 template <>
-inline geometry_msgs::msg::Point getPoint(const geometry_msgs::msg::Pose & p)
+inline geometry_msgs::Point getPoint(const geometry_msgs::Pose & p)
 {
   return p.position;
 }
 
 template <>
-inline geometry_msgs::msg::Point getPoint(const geometry_msgs::msg::PoseStamped & p)
+inline geometry_msgs::Point getPoint(const geometry_msgs::PoseStamped & p)
 {
   return p.pose.position;
 }
 
 template <>
-inline geometry_msgs::msg::Point getPoint(const geometry_msgs::msg::PoseWithCovarianceStamped & p)
+inline geometry_msgs::Point getPoint(const geometry_msgs::PoseWithCovarianceStamped & p)
 {
   return p.pose.pose.position;
 }
-
+#if 0
 template <>
-inline geometry_msgs::msg::Point getPoint(const autoware_auto_planning_msgs::msg::PathPoint & p)
+inline geometry_msgs::Point getPoint(const autoware_auto_planning_msgs::msg::PathPoint & p)
 {
   return p.pose.position;
 }
 
 template <>
-inline geometry_msgs::msg::Point getPoint(
+inline geometry_msgs::Point getPoint(
   const autoware_auto_planning_msgs::msg::PathPointWithLaneId & p)
 {
   return p.point.pose.position;
 }
 
 template <>
-inline geometry_msgs::msg::Point getPoint(
+inline geometry_msgs::Point getPoint(
   const autoware_auto_planning_msgs::msg::TrajectoryPoint & p)
 {
   return p.pose.position;
 }
 
 template <class T>
-geometry_msgs::msg::Pose getPose([[maybe_unused]] const T & p)
+geometry_msgs::Pose getPose([[maybe_unused]] const T & p)
 {
   static_assert(sizeof(T) == 0, "Only specializations of getPose can be used.");
   throw std::logic_error("Only specializations of getPose can be used.");
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(const geometry_msgs::msg::Pose & p)
+inline geometry_msgs::Pose getPose(const geometry_msgs::Pose & p)
 {
   return p;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(const geometry_msgs::msg::PoseStamped & p)
+inline geometry_msgs::Pose getPose(const geometry_msgs::PoseStamped & p)
 {
   return p.pose;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(const autoware_auto_planning_msgs::msg::PathPoint & p)
+inline geometry_msgs::Pose getPose(const autoware_auto_planning_msgs::msg::PathPoint & p)
 {
   return p.pose;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(
+inline geometry_msgs::Pose getPose(
   const autoware_auto_planning_msgs::msg::PathPointWithLaneId & p)
 {
   return p.point.pose;
 }
 
 template <>
-inline geometry_msgs::msg::Pose getPose(const autoware_auto_planning_msgs::msg::TrajectoryPoint & p)
+inline geometry_msgs::Pose getPose(const autoware_auto_planning_msgs::msg::TrajectoryPoint & p)
 {
   return p.pose;
 }
@@ -213,47 +217,47 @@ inline double getLongitudinalVelocity(const autoware_auto_planning_msgs::msg::Tr
 }
 
 template <class T>
-void setPose([[maybe_unused]] const geometry_msgs::msg::Pose & pose, [[maybe_unused]] T & p)
+void setPose([[maybe_unused]] const geometry_msgs::Pose & pose, [[maybe_unused]] T & p)
 {
   static_assert(sizeof(T) == 0, "Only specializations of getPose can be used.");
   throw std::logic_error("Only specializations of getPose can be used.");
 }
 
 template <>
-inline void setPose(const geometry_msgs::msg::Pose & pose, geometry_msgs::msg::Pose & p)
+inline void setPose(const geometry_msgs::Pose & pose, geometry_msgs::Pose & p)
 {
   p = pose;
 }
 
 template <>
-inline void setPose(const geometry_msgs::msg::Pose & pose, geometry_msgs::msg::PoseStamped & p)
+inline void setPose(const geometry_msgs::Pose & pose, geometry_msgs::PoseStamped & p)
 {
   p.pose = pose;
 }
 
 template <>
 inline void setPose(
-  const geometry_msgs::msg::Pose & pose, autoware_auto_planning_msgs::msg::PathPoint & p)
+  const geometry_msgs::Pose & pose, autoware_auto_planning_msgs::msg::PathPoint & p)
 {
   p.pose = pose;
 }
 
 template <>
 inline void setPose(
-  const geometry_msgs::msg::Pose & pose, autoware_auto_planning_msgs::msg::PathPointWithLaneId & p)
+  const geometry_msgs::Pose & pose, autoware_auto_planning_msgs::msg::PathPointWithLaneId & p)
 {
   p.point.pose = pose;
 }
 
 template <>
 inline void setPose(
-  const geometry_msgs::msg::Pose & pose, autoware_auto_planning_msgs::msg::TrajectoryPoint & p)
+  const geometry_msgs::Pose & pose, autoware_auto_planning_msgs::msg::TrajectoryPoint & p)
 {
   p.pose = pose;
 }
 
 template <class T>
-inline void setOrientation(const geometry_msgs::msg::Quaternion & orientation, T & p)
+inline void setOrientation(const geometry_msgs::Quaternion & orientation, T & p)
 {
   auto pose = getPose(p);
   pose.orientation = orientation;
@@ -287,35 +291,35 @@ inline void setLongitudinalVelocity(
 {
   p.point.longitudinal_velocity_mps = velocity;
 }
-
-inline geometry_msgs::msg::Point createPoint(const double x, const double y, const double z)
+#endif
+inline geometry_msgs::Point createPoint(const double x, const double y, const double z)
 {
-  geometry_msgs::msg::Point p;
+  geometry_msgs::Point p;
   p.x = x;
   p.y = y;
   p.z = z;
   return p;
 }
 
-geometry_msgs::msg::Vector3 getRPY(const geometry_msgs::msg::Quaternion & quat);
+geometry_msgs::Vector3 getRPY(const geometry_msgs::Quaternion & quat);
 
-geometry_msgs::msg::Vector3 getRPY(const geometry_msgs::msg::Pose & pose);
+geometry_msgs::Vector3 getRPY(const geometry_msgs::Pose & pose);
 
-geometry_msgs::msg::Vector3 getRPY(const geometry_msgs::msg::PoseStamped & pose);
+geometry_msgs::Vector3 getRPY(const geometry_msgs::PoseStamped & pose);
 
-geometry_msgs::msg::Vector3 getRPY(const geometry_msgs::msg::PoseWithCovarianceStamped & pose);
+geometry_msgs::Vector3 getRPY(const geometry_msgs::PoseWithCovarianceStamped & pose);
 
-geometry_msgs::msg::Quaternion createQuaternion(
+geometry_msgs::Quaternion createQuaternion(
   const double x, const double y, const double z, const double w);
 
-geometry_msgs::msg::Vector3 createTranslation(const double x, const double y, const double z);
+geometry_msgs::Vector3 createTranslation(const double x, const double y, const double z);
 
 // Revival of tf::createQuaternionFromRPY
 // https://answers.ros.org/question/304397/recommended-way-to-construct-quaternion-from-rollpitchyaw-with-tf2/
-geometry_msgs::msg::Quaternion createQuaternionFromRPY(
+geometry_msgs::Quaternion createQuaternionFromRPY(
   const double roll, const double pitch, const double yaw);
 
-geometry_msgs::msg::Quaternion createQuaternionFromYaw(const double yaw);
+geometry_msgs::Quaternion createQuaternionFromYaw(const double yaw);
 
 template <class Point1, class Point2>
 double calcDistance2d(const Point1 & point1, const Point2 & point2)
@@ -354,7 +358,7 @@ double calcDistance3d(const Point1 & point1, const Point2 & point2)
  * @return -pi/2 <= elevation angle <= pi/2
  */
 double calcElevationAngle(
-  const geometry_msgs::msg::Point & p_from, const geometry_msgs::msg::Point & p_to);
+  const geometry_msgs::Point & p_from, const geometry_msgs::Point & p_to);
 
 /**
  * @brief calculate azimuth angle of two points.
@@ -366,17 +370,17 @@ double calcElevationAngle(
  * @return -pi < azimuth angle < pi.
  */
 double calcAzimuthAngle(
-  const geometry_msgs::msg::Point & p_from, const geometry_msgs::msg::Point & p_to);
+  const geometry_msgs::Point & p_from, const geometry_msgs::Point & p_to);
 
-geometry_msgs::msg::Pose transform2pose(const geometry_msgs::msg::Transform & transform);
+geometry_msgs::Pose transform2pose(const geometry_msgs::Transform & transform);
 
-geometry_msgs::msg::PoseStamped transform2pose(
-  const geometry_msgs::msg::TransformStamped & transform);
+geometry_msgs::PoseStamped transform2pose(
+  const geometry_msgs::TransformStamped & transform);
 
-geometry_msgs::msg::Transform pose2transform(const geometry_msgs::msg::Pose & pose);
+geometry_msgs::Transform pose2transform(const geometry_msgs::Pose & pose);
 
-geometry_msgs::msg::TransformStamped pose2transform(
-  const geometry_msgs::msg::PoseStamped & pose, const std::string & child_frame_id);
+geometry_msgs::TransformStamped pose2transform(
+  const geometry_msgs::PoseStamped & pose, const std::string & child_frame_id);
 
 template <class Point1, class Point2>
 tf2::Vector3 point2tfVector(const Point1 & src, const Point2 & dst)
@@ -390,21 +394,21 @@ tf2::Vector3 point2tfVector(const Point1 & src, const Point2 & dst)
   return tf2::Vector3(dx, dy, dz);
 }
 
-Point3d transformPoint(const Point3d & point, const geometry_msgs::msg::Transform & transform);
+Point3d transformPoint(const Point3d & point, const geometry_msgs::Transform & transform);
 
-Point2d transformPoint(const Point2d & point, const geometry_msgs::msg::Transform & transform);
+Point2d transformPoint(const Point2d & point, const geometry_msgs::Transform & transform);
 
 Eigen::Vector3d transformPoint(
-  const Eigen::Vector3d & point, const geometry_msgs::msg::Pose & pose);
+  const Eigen::Vector3d & point, const geometry_msgs::Pose & pose);
 
-geometry_msgs::msg::Point transformPoint(
-  const geometry_msgs::msg::Point & point, const geometry_msgs::msg::Pose & pose);
+geometry_msgs::Point transformPoint(
+  const geometry_msgs::Point & point, const geometry_msgs::Pose & pose);
 
-geometry_msgs::msg::Point32 transformPoint(
-  const geometry_msgs::msg::Point32 & point32, const geometry_msgs::msg::Pose & pose);
+geometry_msgs::Point32 transformPoint(
+  const geometry_msgs::Point32 & point32, const geometry_msgs::Pose & pose);
 
 template <class T>
-T transformVector(const T & points, const geometry_msgs::msg::Transform & transform)
+T transformVector(const T & points, const geometry_msgs::Transform & transform)
 {
   T transformed;
   for (const auto & point : points) {
@@ -413,40 +417,40 @@ T transformVector(const T & points, const geometry_msgs::msg::Transform & transf
   return transformed;
 }
 
-geometry_msgs::msg::Pose transformPose(
-  const geometry_msgs::msg::Pose & pose, const geometry_msgs::msg::TransformStamped & transform);
+geometry_msgs::Pose transformPose(
+  const geometry_msgs::Pose & pose, const geometry_msgs::TransformStamped & transform);
 
-geometry_msgs::msg::Pose transformPose(
-  const geometry_msgs::msg::Pose & pose, geometry_msgs::msg::Transform & transform);
+geometry_msgs::Pose transformPose(
+  const geometry_msgs::Pose & pose, geometry_msgs::Transform & transform);
 
-geometry_msgs::msg::Pose transformPose(
-  const geometry_msgs::msg::Pose & pose, const geometry_msgs::msg::Pose & pose_transform);
+geometry_msgs::Pose transformPose(
+  const geometry_msgs::Pose & pose, const geometry_msgs::Pose & pose_transform);
 
 // Transform pose in world coordinates to local coordinates
 /*
-geometry_msgs::msg::Pose inverseTransformPose(
-  const geometry_msgs::msg::Pose & pose, const geometry_msgs::msg::TransformStamped & transform);
+geometry_msgs::Pose inverseTransformPose(
+  const geometry_msgs::Pose & pose, const geometry_msgs::TransformStamped & transform);
 */
 
 // Transform pose in world coordinates to local coordinates
-geometry_msgs::msg::Pose inverseTransformPose(
-  const geometry_msgs::msg::Pose & pose, const geometry_msgs::msg::Transform & transform);
+geometry_msgs::Pose inverseTransformPose(
+  const geometry_msgs::Pose & pose, const geometry_msgs::Transform & transform);
 
 // Transform pose in world coordinates to local coordinates
-geometry_msgs::msg::Pose inverseTransformPose(
-  const geometry_msgs::msg::Pose & pose, const geometry_msgs::msg::Pose & transform_pose);
+geometry_msgs::Pose inverseTransformPose(
+  const geometry_msgs::Pose & pose, const geometry_msgs::Pose & transform_pose);
 
 // Transform point in world coordinates to local coordinates
 Eigen::Vector3d inverseTransformPoint(
-  const Eigen::Vector3d & point, const geometry_msgs::msg::Pose & pose);
+  const Eigen::Vector3d & point, const geometry_msgs::Pose & pose);
 
 // Transform point in world coordinates to local coordinates
-geometry_msgs::msg::Point inverseTransformPoint(
-  const geometry_msgs::msg::Point & point, const geometry_msgs::msg::Pose & pose);
+geometry_msgs::Point inverseTransformPoint(
+  const geometry_msgs::Point & point, const geometry_msgs::Pose & pose);
 
 double calcCurvature(
-  const geometry_msgs::msg::Point & p1, const geometry_msgs::msg::Point & p2,
-  const geometry_msgs::msg::Point & p3);
+  const geometry_msgs::Point & p1, const geometry_msgs::Point & p2,
+  const geometry_msgs::Point & p3);
 
 template <class Pose1, class Pose2>
 bool isDrivingForward(const Pose1 & src_pose, const Pose2 & dst_pose)
@@ -461,8 +465,8 @@ bool isDrivingForward(const Pose1 & src_pose, const Pose2 & dst_pose)
  * @brief Calculate offset pose. The offset values are defined in the local coordinate of the input
  * pose.
  */
-geometry_msgs::msg::Pose calcOffsetPose(
-  const geometry_msgs::msg::Pose & p, const double x, const double y, const double z);
+geometry_msgs::Pose calcOffsetPose(
+  const geometry_msgs::Pose & p, const double x, const double y, const double z);
 
 /**
  * @brief Calculate a point by linear interpolation.
@@ -472,7 +476,7 @@ geometry_msgs::msg::Pose calcOffsetPose(
  * @return interpolated point
  */
 template <class Point1, class Point2>
-geometry_msgs::msg::Point calcInterpolatedPoint(
+geometry_msgs::Point calcInterpolatedPoint(
   const Point1 & src, const Point2 & dst, const double ratio)
 {
   const auto src_point = getPoint(src);
@@ -492,7 +496,7 @@ geometry_msgs::msg::Point calcInterpolatedPoint(
   const double clamped_ratio = std::clamp(ratio, 0.0, 1.0);
   const auto & vec = tf2::lerp(src_vec, dst_vec, clamped_ratio);
 
-  geometry_msgs::msg::Point point;
+  geometry_msgs::Point point;
   point.x = vec.x();
   point.y = vec.y();
   point.z = vec.z();
@@ -512,13 +516,13 @@ geometry_msgs::msg::Point calcInterpolatedPoint(
  * @return interpolated point
  */
 template <class Pose1, class Pose2>
-geometry_msgs::msg::Pose calcInterpolatedPose(
+geometry_msgs::Pose calcInterpolatedPose(
   const Pose1 & src_pose, const Pose2 & dst_pose, const double ratio,
   const bool set_orientation_from_position_direction = true)
 {
   const double clamped_ratio = std::clamp(ratio, 0.0, 1.0);
 
-  geometry_msgs::msg::Pose output_pose;
+  geometry_msgs::Pose output_pose;
   output_pose.position =
     calcInterpolatedPoint(getPoint(src_pose), getPoint(dst_pose), clamped_ratio);
 
@@ -550,18 +554,25 @@ geometry_msgs::msg::Pose calcInterpolatedPose(
   return output_pose;
 }
 
-inline geometry_msgs::msg::Vector3 createVector3(const double x, double y, double z)
+inline geometry_msgs::Vector3 createVector3(const double x, double y, double z)
 {
-  return geometry_msgs::build<geometry_msgs::msg::Vector3>().x(x).y(y).z(z);
+  geometry_msgs::Vector3 vect3;
+  vect3.x = x;
+  vect3.y = y;
+  vect3.z = z;
+  return vect3;
 }
 
-inline geometry_msgs::msg::Twist createTwist(
-  const geometry_msgs::msg::Vector3 & velocity, geometry_msgs::msg::Vector3 & angular)
+inline geometry_msgs::Twist createTwist(
+  const geometry_msgs::Vector3 & velocity, geometry_msgs::Vector3 & angular)
 {
-  return geometry_msgs::build<geometry_msgs::msg::Twist>().linear(velocity).angular(angular);
+  geometry_msgs::Twist twist_;
+  twist_.linear = velocity;
+  twist_.angular = angular;
+  return twist_;
 }
 
-inline double calcNorm(const geometry_msgs::msg::Vector3 & v)
+inline double calcNorm(const geometry_msgs::Vector3 & v)
 {
   return std::hypot(v.x, v.y, v.z);
 }
@@ -573,12 +584,12 @@ inline double calcNorm(const geometry_msgs::msg::Vector3 & v)
  * @return If all element of covariance is 0, return false.
  */
 //
-bool isTwistCovarianceValid(const geometry_msgs::msg::TwistWithCovariance & twist_with_covariance);
+bool isTwistCovarianceValid(const geometry_msgs::TwistWithCovariance & twist_with_covariance);
 
 // NOTE: much faster than boost::geometry::intersects()
-std::optional<geometry_msgs::msg::Point> intersect(
-  const geometry_msgs::msg::Point & p1, const geometry_msgs::msg::Point & p2,
-  const geometry_msgs::msg::Point & p3, const geometry_msgs::msg::Point & p4);
+std::optional<geometry_msgs::Point> intersect(
+  const geometry_msgs::Point & p1, const geometry_msgs::Point & p2,
+  const geometry_msgs::Point & p3, const geometry_msgs::Point & p4);
 
 }  // namespace tier4_autoware_utils
 

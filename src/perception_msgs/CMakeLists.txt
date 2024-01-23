@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   geometry_msgs
+  uuid_msgs
   message_generation
 )
 
@@ -55,6 +56,12 @@ add_message_files(
   ObjectClassification.msg
   DetectedObject.msg
   DetectedObjects.msg
+  TrackedObject.msg
+  TrackedObjectKinematics.msg
+  TrackedObjects.msg
+  PredictedObject.msg
+  PredictedObjectKinematics.msg
+  PredictedObjects.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -76,6 +83,7 @@ generate_messages(
   DEPENDENCIES
   geometry_msgs
   std_msgs
+  uuid_msgs
 )
 
 ################################################
