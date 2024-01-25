@@ -28,8 +28,8 @@ public:
   explicit LidarCenterPointNode();
 
 private:
-  ros::NodeHandle nh;
-  void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr input_pointcloud_msg);
+  ros::NodeHandle *nh;
+  void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &input_pointcloud_msg);
 
   // tf2_ros::Buffer tf_buffer_;
   // tf2_ros::TransformListener tf_listener_{tf_buffer_};
@@ -52,8 +52,8 @@ private:
   int max_voxel_size;
   std::vector<double> point_cloud_range;
   std::vector<double> voxel_size;
-  std::size_t downsample_factor;
-  std::size_t encoder_in_feature_size;
+  int downsample_factor;
+  int encoder_in_feature_size;
   std::vector<int> allow_remapping_by_area_matrix;
   std::vector<double> min_area_matrix;
   std::vector<double> max_area_matrix;

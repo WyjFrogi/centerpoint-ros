@@ -17,3 +17,5 @@
 
 - 0123,回到家中在wsl2的ubuntu系统里。tensorrt是用deb安装至/usr/include/x86_64-linux-gnu和/usr/lib/x86_64-linux-gnu下，这次编译tensorrt_common包不报错，虽然我又重新将tar包解压至至/usr/local/下，但目前还不清楚到底用的是哪个路径下的库和头文件
 
+- 0125,回到家中在wsl2的ubuntu系统里.修改完代码，编译通过。但是还没有找到tensorrt的头文件的错误
+

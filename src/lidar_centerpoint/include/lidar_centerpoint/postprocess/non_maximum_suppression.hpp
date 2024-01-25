@@ -45,18 +45,18 @@ struct NMSParams
   // double distance_threshold_{};
 };
 
-std::vector<bool> classNamesToBooleanMask(const std::vector<std::string> & class_names)
-{
-  std::vector<bool> mask;
-  constexpr std::size_t num_object_classification = 8;
-  mask.resize(num_object_classification);
-  for (const auto & class_name : class_names) {
-    const auto semantic_type = getSemanticType(class_name);
-    mask.at(semantic_type) = true;
-  }
+// std::vector<bool> classNamesToBooleanMask(const std::vector<std::string> & class_names)
+// {
+//   std::vector<bool> mask;
+//   constexpr std::size_t num_object_classification = 8;
+//   mask.resize(num_object_classification);
+//   for (const auto & class_name : class_names) {
+//     const auto semantic_type = getSemanticType(class_name);
+//     mask.at(semantic_type) = true;
+//   }
 
-  return mask;
-}
+//   return mask;
+// }
 
 class NonMaximumSuppression
 {

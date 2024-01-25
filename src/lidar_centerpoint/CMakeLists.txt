@@ -24,7 +24,7 @@ message("TENSORRT_LIB_PATH: ${TRT_PATH}")
 
 # set flags for CUDA availability
 option(CUDA_AVAIL "CUDA available" OFF)
-find_package(CUDA)
+find_package(CUDA REQUIRED)
 if(CUDA_FOUND)
   set(CUDA_VERBOSE ON)
   find_library(CUBLAS_LIBRARIES cublas HINTS
@@ -134,11 +134,13 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
 
   ## node ##
   add_executable(lidar_centerpoint_component
+  src/main.cpp
   src/node.cpp
 )
 
   target_link_libraries(lidar_centerpoint_component
     centerpoint_lib
+    ${catkin_LIBRARIES}
   )
 
   install(PROGRAMS
