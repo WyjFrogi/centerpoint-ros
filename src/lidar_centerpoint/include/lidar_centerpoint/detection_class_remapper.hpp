@@ -31,7 +31,7 @@ class DetectionClassRemapper
 {
 public:
   void setParameters(
-    const std::vector<int64_t> & allow_remapping_by_area_matrix,
+    const std::vector<int> & allow_remapping_by_area_matrix,
     const std::vector<double> & min_area_matrix, const std::vector<double> & max_area_matrix);
   void mapClasses(perception_msgs::DetectedObjects & msg);
 

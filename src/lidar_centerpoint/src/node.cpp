@@ -41,17 +41,17 @@ LidarCenterPointNode::LidarCenterPointNode()
   nh->getParam("min_area_matrix", min_area_matrix);
   nh->getParam("max_area_matrix", max_area_matrix);
 
-  // detection_class_remapper_.setParameters(
-  //   allow_remapping_by_area_matrix, min_area_matrix, max_area_matrix);
+  detection_class_remapper_.setParameters(
+    allow_remapping_by_area_matrix, min_area_matrix, max_area_matrix);
 
-  // { 
-  //   NMSParams p;
-  //   p.nms_type_ = NMS_TYPE::IoU_BEV;
-  //   private_nh.getParam("iou_nms_target_class_names", p.target_class_names_);
-  //   private_nh.param("iou_nms_search_distance_2d", p.search_distance_2d_, 0.0);
-  //   private_nh.param("iou_nms_threshold", p.iou_threshold_, 0.0);
-  //   iou_bev_nms_.setParameters(p);
-  // }
+  { 
+    NMSParams p;
+    p.nms_type_ = NMS_TYPE::IoU_BEV;
+    private_nh.getParam("iou_nms_target_class_names", p.target_class_names_);
+    private_nh.param("iou_nms_search_distance_2d", p.search_distance_2d_, 0.0);
+    private_nh.param("iou_nms_threshold", p.iou_threshold_, 0.0);
+    iou_bev_nms_.setParameters(p);
+  }
 
   // NetworkParam encoder_param(encoder_onnx_path, encoder_engine_path, trt_precision);
   // NetworkParam head_param(head_onnx_path, head_engine_path, trt_precision);

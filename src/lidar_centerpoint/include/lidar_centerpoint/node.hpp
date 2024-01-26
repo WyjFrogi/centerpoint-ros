@@ -58,10 +58,10 @@ private:
   std::vector<double> min_area_matrix;
   std::vector<double> max_area_matrix;
 
-  // NonMaximumSuppression iou_bev_nms_;
-  // DetectionClassRemapper detection_class_remapper_;
+  NonMaximumSuppression iou_bev_nms_;
+  DetectionClassRemapper detection_class_remapper_;
 
-  // std::unique_ptr<CenterPointTRT> detector_ptr_{nullptr};
+  std::unique_ptr<CenterPointTRT> detector_ptr_{nullptr};
 
   // debugger
 //   std::unique_ptr<tier4_autoware_utils::StopWatch<std::chrono::milliseconds>> stop_watch_ptr_{

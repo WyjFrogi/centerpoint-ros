@@ -18,7 +18,7 @@ namespace centerpoint
 {
 
 void DetectionClassRemapper::setParameters(
-  const std::vector<int64_t> & allow_remapping_by_area_matrix,
+  const std::vector<int> & allow_remapping_by_area_matrix,
   const std::vector<double> & min_area_matrix, const std::vector<double> & max_area_matrix)
 {
   assert(allow_remapping_by_area_matrix.size() == min_area_matrix.size());
@@ -28,7 +28,7 @@ void DetectionClassRemapper::setParameters(
 
   num_labels_ = static_cast<int>(std::sqrt(min_area_matrix.size()));
 
-  Eigen::Map<const Eigen::Matrix<int64_t, Eigen::Dynamic, Eigen::Dynamic>>
+  Eigen::Map<const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>>
     allow_remapping_by_area_matrix_tmp(
       allow_remapping_by_area_matrix.data(), num_labels_, num_labels_);
   allow_remapping_by_area_matrix_ = allow_remapping_by_area_matrix_tmp.transpose()
