@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 add_compile_options(-Wno-deprecated-declarations)
-
+find_package(Eigen3 REQUIRED)
 option(CUDA_VERBOSE "Verbose output of CUDA modules" OFF)
 set(TRT_PATH /usr/local/TensorRT-8.6.1.6)
 message("TENSORRT_LIB_PATH: ${TRT_PATH}")
@@ -87,7 +87,8 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
     include
     ${CUDA_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
-    /usr/include/eigen3
+    ${TRT_PATH}/include
+    ${EIGEN_INCLUDE_DIRS}
 
   )
 
