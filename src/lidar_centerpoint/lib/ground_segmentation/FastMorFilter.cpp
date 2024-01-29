@@ -252,5 +252,5 @@ void fastMorFilter::FastMorFilter<PointT>::extract(std::vector<int> &ground)
 
     deinitCompute();
 }
-
+template class fastMorFilter::FastMorFilter<pcl::PointXYZI>;
 #endif // FASTMORFILTER_CPP_
