@@ -31,7 +31,7 @@ include_directories(
 add_library(tier4_autoware_utils SHARED
   src/geometry/geometry.cpp
   # src/geometry/pose_deviation.cpp
-  # src/geometry/boost_polygon_utils.cpp
+  src/geometry/boost_polygon_utils.cpp
   # src/math/sin_table.cpp
   # src/math/trigonometry.cpp
   # src/ros/msg_operation.cpp

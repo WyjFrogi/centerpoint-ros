@@ -26,7 +26,7 @@ namespace bg = boost::geometry;
 using tier4_autoware_utils::Point2d;
 using tier4_autoware_utils::Polygon2d;
 
-void appendPointToPolygon(Polygon2d & polygon, const geometry_msgs::msg::Point & geom_point)
+void appendPointToPolygon(Polygon2d & polygon, const geometry_msgs::Point & geom_point)
 {
   Point2d point;
   point.x() = geom_point.x;
@@ -44,7 +44,7 @@ void appendPointToPolygon(Polygon2d & polygon, const Point2d & point)
  * NOTE: Area is negative when footprint.points is clock wise.
  *       Area is positive when footprint.points is anti clock wise.
  */
-double getPolygonArea(const geometry_msgs::msg::Polygon & footprint)
+double getPolygonArea(const geometry_msgs::Polygon & footprint)
 {
   double area = 0.0;
 
@@ -57,12 +57,12 @@ double getPolygonArea(const geometry_msgs::msg::Polygon & footprint)
   return area;
 }
 
-double getRectangleArea(const geometry_msgs::msg::Vector3 & dimensions)
+double getRectangleArea(const geometry_msgs::Vector3 & dimensions)
 {
   return static_cast<double>(dimensions.x * dimensions.y);
 }
 
-double getCircleArea(const geometry_msgs::msg::Vector3 & dimensions)
+double getCircleArea(const geometry_msgs::Vector3 & dimensions)
 {
   return static_cast<double>((dimensions.x / 2.0) * (dimensions.x / 2.0) * M_PI);
 }
@@ -92,12 +92,12 @@ Polygon2d inverseClockwise(const Polygon2d & polygon)
   return output_polygon;
 }
 
-geometry_msgs::msg::Polygon rotatePolygon(
-  const geometry_msgs::msg::Polygon & polygon, const double & angle)
+geometry_msgs::Polygon rotatePolygon(
+  const geometry_msgs::Polygon & polygon, const double & angle)
 {
   const double cos = std::cos(angle);
   const double sin = std::sin(angle);
-  geometry_msgs::msg::Polygon rotated_polygon;
+  geometry_msgs::Polygon rotated_polygon;
   for (const auto & point : polygon.points) {
     auto rotated_point = point;
     rotated_point.x = cos * point.x - sin * point.y;
@@ -118,11 +118,11 @@ Polygon2d rotatePolygon(const Polygon2d & polygon, const double angle)
 }
 
 Polygon2d toPolygon2d(
-  const geometry_msgs::msg::Pose & pose, const autoware_auto_perception_msgs::msg::Shape & shape)
+  const geometry_msgs::Pose & pose, const perception_msgs::Shape & shape)
 {
   Polygon2d polygon;
 
-  if (shape.type == autoware_auto_perception_msgs::msg::Shape::BOUNDING_BOX) {
+  if (shape.type == perception_msgs::Shape::BOUNDING_BOX) {
     const auto point0 = tier4_autoware_utils::calcOffsetPose(
                           pose, shape.dimensions.x / 2.0, shape.dimensions.y / 2.0, 0.0)
                           .position;
@@ -140,11 +140,11 @@ Polygon2d toPolygon2d(
     appendPointToPolygon(polygon, point1);
     appendPointToPolygon(polygon, point2);
     appendPointToPolygon(polygon, point3);
-  } else if (shape.type == autoware_auto_perception_msgs::msg::Shape::CYLINDER) {
+  } else if (shape.type == perception_msgs::Shape::CYLINDER) {
     const double radius = shape.dimensions.x / 2.0;
     constexpr int circle_discrete_num = 6;
     for (int i = 0; i < circle_discrete_num; ++i) {
-      geometry_msgs::msg::Point point;
+      geometry_msgs::Point point;
       point.x = std::cos(
                   (static_cast<double>(i) / static_cast<double>(circle_discrete_num)) * 2.0 * M_PI +
                   M_PI / static_cast<double>(circle_discrete_num)) *
@@ -157,11 +157,11 @@ Polygon2d toPolygon2d(
                 pose.position.y;
       appendPointToPolygon(polygon, point);
     }
-  } else if (shape.type == autoware_auto_perception_msgs::msg::Shape::POLYGON) {
+  } else if (shape.type == perception_msgs::Shape::POLYGON) {
     const double poly_yaw = tf2::getYaw(pose.orientation);
     const auto rotated_footprint = rotatePolygon(shape.footprint, poly_yaw);
     for (const auto rel_point : rotated_footprint.points) {
-      geometry_msgs::msg::Point abs_point;
+      geometry_msgs::Point abs_point;
       abs_point.x = pose.position.x + rel_point.x;
       abs_point.y = pose.position.y + rel_point.y;
 
@@ -180,28 +180,28 @@ Polygon2d toPolygon2d(
 }
 
 tier4_autoware_utils::Polygon2d toPolygon2d(
-  const autoware_auto_perception_msgs::msg::DetectedObject & object)
+  const perception_msgs::DetectedObject & object)
 {
   return tier4_autoware_utils::toPolygon2d(
     object.kinematics.pose_with_covariance.pose, object.shape);
 }
 
 tier4_autoware_utils::Polygon2d toPolygon2d(
-  const autoware_auto_perception_msgs::msg::TrackedObject & object)
+  const perception_msgs::TrackedObject & object)
 {
   return tier4_autoware_utils::toPolygon2d(
     object.kinematics.pose_with_covariance.pose, object.shape);
 }
 
 tier4_autoware_utils::Polygon2d toPolygon2d(
-  const autoware_auto_perception_msgs::msg::PredictedObject & object)
+  const perception_msgs::PredictedObject & object)
 {
   return tier4_autoware_utils::toPolygon2d(
     object.kinematics.initial_pose_with_covariance.pose, object.shape);
 }
 
 Polygon2d toFootprint(
-  const geometry_msgs::msg::Pose & base_link_pose, const double base_to_front,
+  const geometry_msgs::Pose & base_link_pose, const double base_to_front,
   const double base_to_rear, const double width)
 {
   Polygon2d polygon;
@@ -223,13 +223,13 @@ Polygon2d toFootprint(
   return isClockwise(polygon) ? polygon : inverseClockwise(polygon);
 }
 
-double getArea(const autoware_auto_perception_msgs::msg::Shape & shape)
+double getArea(const perception_msgs::Shape & shape)
 {
-  if (shape.type == autoware_auto_perception_msgs::msg::Shape::BOUNDING_BOX) {
+  if (shape.type == perception_msgs::Shape::BOUNDING_BOX) {
     return getRectangleArea(shape.dimensions);
-  } else if (shape.type == autoware_auto_perception_msgs::msg::Shape::CYLINDER) {
+  } else if (shape.type == perception_msgs::Shape::CYLINDER) {
     return getCircleArea(shape.dimensions);
-  } else if (shape.type == autoware_auto_perception_msgs::msg::Shape::POLYGON) {
+  } else if (shape.type == perception_msgs::Shape::POLYGON) {
     return getPolygonArea(shape.footprint);
   }
 

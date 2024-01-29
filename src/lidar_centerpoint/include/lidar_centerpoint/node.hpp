@@ -5,10 +5,22 @@
 
 #include <lidar_centerpoint/centerpoint_trt.hpp>
 #include <lidar_centerpoint/detection_class_remapper.hpp>
+#include "lidar_centerpoint/ground_segmentation/FastMorFilter.h"
 #include <ros/ros.h>
 // #include <tier4_autoware_utils/ros/debug_publisher.hpp>
 // #include <tier4_autoware_utils/system/stop_watch.hpp>
 
+#include <pcl/filters/crop_box.h>
+#include <pcl/filters/statistical_outlier_removal.h>
+#include <pcl/segmentation/extract_clusters.h>
+#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_ros/point_cloud.h>
+#include <pcl_ros/transforms.h>
+#include <pcl/filters/filter.h>
+#include <pcl/filters/extract_indices.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/approximate_voxel_grid.h>
+#include <pcl/filters/passthrough.h>
 #include <perception_msgs/DetectedObjectKinematics.h>
 #include <perception_msgs/DetectedObjects.h>
 #include <perception_msgs/ObjectClassification.h>
@@ -18,6 +30,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 namespace centerpoint
 {
@@ -28,11 +42,13 @@ public:
   explicit LidarCenterPointNode();
 
 private:
+  typedef pcl::PointCloud<pcl::PointXYZI> PointCloudT;
   ros::NodeHandle *nh;
   void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &input_pointcloud_msg);
+  void cloudsProcess(PointCloudT::Ptr &source_pointcloud);
 
-  // tf2_ros::Buffer tf_buffer_;
-  // tf2_ros::TransformListener tf_listener_{tf_buffer_};
+  tf2_ros::Buffer tf_buffer_;
+  tf2_ros::TransformListener tf_listener_{tf_buffer_};
 
   ros::Subscriber pointcloud_sub_;
   ros::Publisher objects_pub_;

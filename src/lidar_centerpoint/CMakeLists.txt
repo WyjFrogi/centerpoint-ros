@@ -103,6 +103,7 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
     lib/postprocess/non_maximum_suppression.cpp
     lib/preprocess/pointcloud_densification.cpp
     lib/preprocess/voxel_generator.cpp
+    lib/ground_segmentation/FastMorFilter.cpp
   )
 
   cuda_add_library(centerpoint_cuda_lib SHARED
@@ -119,6 +120,7 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
     ${CUBLAS_LIBRARIES}
     ${CUDA_curand_LIBRARY}
     ${CUDNN_LIBRARY}
+    ${catkin_LIBRARIES}
     centerpoint_cuda_lib
   )
 
