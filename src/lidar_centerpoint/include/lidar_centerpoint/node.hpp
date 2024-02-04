@@ -43,7 +43,7 @@ public:
 
 private:
   typedef pcl::PointCloud<pcl::PointXYZI> PointCloudT;
-  ros::NodeHandle *nh;
+  ros::NodeHandle nh;
   void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &input_pointcloud_msg);
   void cloudsProcess(PointCloudT::Ptr &source_pointcloud);
 

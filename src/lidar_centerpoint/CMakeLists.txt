@@ -81,6 +81,11 @@ else()
   set(CUDNN_AVAIL OFF)
 endif()
 
+catkin_package(
+  # INCLUDE_DIRS include
+  # LIBRARIES lidar_centerpoint
+  # CATKIN_DEPENDS roscpp rospy
+)
 if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
 
   include_directories(
@@ -136,12 +141,12 @@ if(TRT_AVAIL AND CUDA_AVAIL AND CUDNN_AVAIL)
   )
 
   ## node ##
-  add_executable(lidar_centerpoint_component
+  add_executable(lidar_centerpoint_node
   src/main.cpp
   src/node.cpp
 )
 
-  target_link_libraries(lidar_centerpoint_component
+  target_link_libraries(lidar_centerpoint_node
     centerpoint_lib
     ${catkin_LIBRARIES}
   )

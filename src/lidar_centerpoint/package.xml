@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>centerpoint_ros</name>
+  <name>lidar_centerpoint</name>
   <version>0.0.0</version>
   <description>The centerpoint_ros package</description>
 
