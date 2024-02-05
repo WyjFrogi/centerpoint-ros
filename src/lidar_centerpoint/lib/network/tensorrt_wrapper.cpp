@@ -31,9 +31,9 @@ TensorRTWrapper::TensorRTWrapper(const CenterPointConfig & config) : config_(con
 TensorRTWrapper::~TensorRTWrapper()
 {
   context_.reset();
+  engine_.reset();
   runtime_.reset();
   plan_.reset();
-  engine_.reset();
 }
 
 bool TensorRTWrapper::init(

@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="input/pointcloud" default="/livox/lidar"/>
-  <arg name="output/objects" default="/objects"/>
-  <arg name="data_path" default="$(env HOME)/wangyanjun/Git/models" doc="packages data and artifacts directory path"/>
+  <!-- <arg name="input/pointcloud" default="/livox/lidar"/>
+  <arg name="output/objects" default="/objects"/> -->
   <arg name="model_name" default="centerpoint_tiny" doc="options: `centerpoint` or `centerpoint_tiny`"/>
-  <arg name="model_path" default="$(arg data_path)/centerpoint"/>
+  <arg name="model_path" default="$(find lidar_centerpoint)/models"/>
   <arg name="model_param_path" default="$(find lidar_centerpoint)/config/$(arg model_name)_param.yaml"/>
   <arg name="class_remapper_param_path" default="$(find lidar_centerpoint)/config/detection_class_remapper_param.yaml"/>
   <arg name="score_threshold" default="0.35"/>
@@ -12,8 +11,8 @@
   <arg name="build_only" default="false" doc="shutdown node after TensorRT engine file is built"/>
 
   <node pkg="lidar_centerpoint" type="lidar_centerpoint_node" name="lidar_centerpoint_node" output="screen">
-    <remap from="~/input/pointcloud" to="$(arg input/pointcloud)"/>
-    <remap from="~/output/objects" to="$(arg output/objects)"/>
+    <!-- <remap from="/input/pointcloud" to="$(arg input/pointcloud)"/>
+    <remap from="/output/objects" to="$(arg output/objects)"/> -->
     <param name="score_threshold" value="$(arg score_threshold)"/>
     <param name="densification_world_frame_id" value="map"/>
     <param name="densification_num_past_frames" value="1"/>
@@ -26,7 +25,5 @@
     <param name="build_only" value="$(arg build_only)"/>
     <rosparam command="load" file="$(arg model_param_path)"/>
     <rosparam command="load" file="$(arg class_remapper_param_path)"/>
-    <!-- <param from="$(arg model_param_path)"/>
-    <param from="$(arg class_remapper_param_path)"/> -->
   </node>
 </launch>

@@ -16,29 +16,29 @@
 
 namespace centerpoint
 {
-LidarCenterPointNode::LidarCenterPointNode()
+LidarCenterPointNode::LidarCenterPointNode() : private_nh("~")
 {
-  nh.param<float>("score_threshold", score_threshold, 0.35);
-  nh.param<float>("circle_nms_dist_threshold", circle_nms_dist_threshold, 0.0);
-  nh.getParam("yaw_norm_thresholds", yaw_norm_thresholds);
-  nh.param("densification_world_frame_id", densification_world_frame_id, std::string("map"));
-  nh.param<int>("densification_num_past_frames", densification_num_past_frames, 1);
-  nh.param("trt_precision", trt_precision, std::string("fp16"));
-  nh.param("encoder_onnx_path", encoder_onnx_path, std::string("pts_voxel_encoder_centerpoint.onnx"));
-  nh.param("encoder_engine_path", encoder_engine_path, std::string("pts_voxel_encoder_centerpoint.engine"));
-  nh.param("head_onnx_path", head_onnx_path, std::string("pts_backbone_neck_head_centerpoint.onnx"));
-  nh.param("head_engine_path", head_engine_path, std::string("pts_backbone_neck_head_centerpoint.engine"));
-  nh.getParam("class_names", class_names_);
-  nh.param<bool>("has_twist", has_twist_, false);
-  nh.param<int>("point_feature_size", point_feature_size, 0);
-  nh.param<int>("max_voxel_size", max_voxel_size, 0);
-  nh.getParam("point_cloud_range", point_cloud_range);
-  nh.getParam("voxel_size", voxel_size);
-  nh.param<int>("downsample_factor", downsample_factor, 0);
-  nh.param<int>("encoder_in_feature_size", encoder_in_feature_size, 0);
-  nh.getParam("allow_remapping_by_area_matrix", allow_remapping_by_area_matrix);
-  nh.getParam("min_area_matrix", min_area_matrix);
-  nh.getParam("max_area_matrix", max_area_matrix);
+  private_nh.param<float>("score_threshold", score_threshold, 0.35);
+  private_nh.param<float>("circle_nms_dist_threshold", circle_nms_dist_threshold, 0.0);
+  private_nh.getParam("yaw_norm_thresholds", yaw_norm_thresholds);
+  private_nh.param("densification_world_frame_id", densification_world_frame_id, std::string("world"));
+  private_nh.param<int>("densification_num_past_frames", densification_num_past_frames, 1);
+  private_nh.param("trt_precision", trt_precision, std::string("fp16"));
+  private_nh.param("encoder_onnx_path", encoder_onnx_path, std::string("pts_voxel_encoder_centerpoint.onnx"));
+  private_nh.param("encoder_engine_path", encoder_engine_path, std::string("pts_voxel_encoder_centerpoint.engine"));
+  private_nh.param("head_onnx_path", head_onnx_path, std::string("pts_backbone_neck_head_centerpoint.onnx"));
+  private_nh.param("head_engine_path", head_engine_path, std::string("pts_backbone_neck_head_centerpoint.engine"));
+  private_nh.getParam("class_names", class_names_);
+  private_nh.param<bool>("has_twist", has_twist_, false);
+  private_nh.param<int>("point_feature_size", point_feature_size, 0);
+  private_nh.param<int>("max_voxel_size", max_voxel_size, 0);
+  private_nh.getParam("point_cloud_range", point_cloud_range);
+  private_nh.getParam("voxel_size", voxel_size);
+  private_nh.param<int>("downsample_factor", downsample_factor, 0);
+  private_nh.param<int>("encoder_in_feature_size", encoder_in_feature_size, 0);
+  private_nh.getParam("allow_remapping_by_area_matrix", allow_remapping_by_area_matrix);
+  private_nh.getParam("min_area_matrix", min_area_matrix);
+  private_nh.getParam("max_area_matrix", max_area_matrix);
   ROS_INFO("init param");
   detection_class_remapper_.setParameters(
     allow_remapping_by_area_matrix, min_area_matrix, max_area_matrix);
@@ -46,9 +46,9 @@ LidarCenterPointNode::LidarCenterPointNode()
   { 
     NMSParams p;
     p.nms_type_ = NMS_TYPE::IoU_BEV;
-    nh.getParam("iou_nms_target_class_names", p.target_class_names_);
-    nh.param("iou_nms_search_distance_2d", p.search_distance_2d_, 0.0);
-    nh.param("iou_nms_threshold", p.iou_threshold_, 0.0);
+    private_nh.getParam("iou_nms_target_class_names", p.target_class_names_);
+    private_nh.param("iou_nms_search_distance_2d", p.search_distance_2d_, 0.0);
+    private_nh.param("iou_nms_threshold", p.iou_threshold_, 0.0);
     iou_bev_nms_.setParameters(p);
   }
 
@@ -71,9 +71,9 @@ LidarCenterPointNode::LidarCenterPointNode()
     std::make_unique<CenterPointTRT>(encoder_param, head_param, densification_param, config);
   ROS_INFO("init config param");
   pointcloud_sub_ = nh.subscribe<sensor_msgs::PointCloud2>(
-    "~/input/pointcloud", 10, &LidarCenterPointNode::pointCloudCallback, this);
-  objects_pub_ = nh.advertise<perception_msgs::DetectedObjects>(
-    "~/output/objects", 10);
+    "/livox/lidar", 10, &LidarCenterPointNode::pointCloudCallback, this);
+  objects_pub_ = nh.advertise<perception_msgs::DetectedObjects>("/output/objects", 10);
+  preprocess_point_pub_ = nh.advertise<sensor_msgs::PointCloud2>("/preprocess_pointcloud", 10);
   ROS_INFO("init complete");
   // initialize debug tool
   // {
@@ -91,6 +91,9 @@ LidarCenterPointNode::LidarCenterPointNode()
   // }
 }
 
+LidarCenterPointNode::~LidarCenterPointNode()
+{
+}
 void LidarCenterPointNode::pointCloudCallback(
   const sensor_msgs::PointCloud2::ConstPtr &input_pointcloud_msg)
 {
@@ -99,18 +102,22 @@ void LidarCenterPointNode::pointCloudCallback(
   LidarCenterPointNode::cloudsProcess(input_pointcloud);
   sensor_msgs::PointCloud2 preprocess_cloud;
   pcl::toROSMsg(*input_pointcloud, preprocess_cloud);
-  const auto objects_sub_count = objects_pub_.getNumSubscribers();
-  if (objects_sub_count < 1) {
-    return;
-  }
+  preprocess_cloud.header = input_pointcloud_msg->header;
+  preprocess_point_pub_.publish(preprocess_cloud);
+  ROS_INFO("publish preprocess cloud!!!");
+  const auto objects_sub_count = 1;
+  // const auto objects_sub_count = objects_pub_.getNumSubscribers();
+  // if (objects_sub_count < 1) {
+  //   return;
+  // }
 
-
+  ROS_INFO("start detect");
   std::vector<Box3D> det_boxes3d;
   bool is_success = detector_ptr_->detect(preprocess_cloud, tf_buffer_, det_boxes3d);
   if (!is_success) {
     return;
   }
-
+  ROS_INFO("convert to format of pub");
   std::vector<perception_msgs::DetectedObject> raw_objects;
   raw_objects.reserve(det_boxes3d.size());
   for (const auto & box3d : det_boxes3d) {
@@ -119,12 +126,14 @@ void LidarCenterPointNode::pointCloudCallback(
     raw_objects.emplace_back(obj);
   }
 
+  ROS_INFO("postprocess");
   perception_msgs::DetectedObjects output_msg;
   output_msg.header = input_pointcloud_msg->header;
   output_msg.objects = iou_bev_nms_.apply(raw_objects);
 
   detection_class_remapper_.mapClasses(output_msg);
 
+  ROS_INFO("pub output msg");
   if (objects_sub_count > 0) {
     objects_pub_.publish(output_msg);
   }
@@ -228,7 +237,7 @@ void LidarCenterPointNode::cloudsProcess(PointCloudT::Ptr &source_pointcloud)
   auto downsample_endTime = std::chrono::steady_clock::now();
   ROS_INFO("After voxelgrid filter, the point number: %ld", cloud_filtered->size());
   auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(downsample_endTime - ROITime_end);
-  ROS_INFO("[test2test2test2]Voxelgrid downsampling costs time: %lu ms", elapsedTime.count());
+  ROS_INFO("Voxelgrid downsampling costs time: %lu ms", elapsedTime.count());
 
 #if POINTCLOUD_FILTER
       sensor_msgs::PointCloud2 filter_tree_points;
@@ -252,7 +261,7 @@ void LidarCenterPointNode::cloudsProcess(PointCloudT::Ptr &source_pointcloud)
 
       if(lidarMF)
       {
-          ROS_INFO_STREAM("Start LF OpenMp");
+          ROS_INFO_STREAM("Start MF OpenMp");
           fastMorFilter::FastMorFilter<pcl::PointXYZI> mf;
           mf.setInputCloud(cloud_filtered);
           mf.setMaxWindowSize(8);

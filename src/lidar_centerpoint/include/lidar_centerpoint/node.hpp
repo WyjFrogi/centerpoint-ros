@@ -40,10 +40,12 @@ class LidarCenterPointNode
 {
 public:
   explicit LidarCenterPointNode();
+  ~LidarCenterPointNode();
 
 private:
   typedef pcl::PointCloud<pcl::PointXYZI> PointCloudT;
   ros::NodeHandle nh;
+  ros::NodeHandle private_nh;
   void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &input_pointcloud_msg);
   void cloudsProcess(PointCloudT::Ptr &source_pointcloud);
 
@@ -52,6 +54,7 @@ private:
 
   ros::Subscriber pointcloud_sub_;
   ros::Publisher objects_pub_;
+  ros::Publisher preprocess_point_pub_;
   float score_threshold;
   float circle_nms_dist_threshold;
   std::vector<double> yaw_norm_thresholds;
