@@ -3,3 +3,4 @@
 /build/
 /devel/
 /install/
+/src/lidar_centerpoint/models/*.engine

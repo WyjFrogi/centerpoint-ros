@@ -26,4 +26,6 @@
     <rosparam command="load" file="$(arg model_param_path)"/>
     <rosparam command="load" file="$(arg class_remapper_param_path)"/>
   </node>
+  <node pkg="tf" type="static_transform_publisher" name="map_to_world" args="0 0 0 0 0 0 /map /world 100" />
+  <node pkg="tf" type="static_transform_publisher" name="livox_frame_to_map" args="0 0 0 0 0 0 /map /livox_frame 100" />
 </launch>
